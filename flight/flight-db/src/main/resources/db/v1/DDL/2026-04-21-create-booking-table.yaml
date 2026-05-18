@@ -1,0 +1,58 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260421-create-booking-table
+      author: yakupov
+      changes:
+        - createTable:
+            remarks: "Таблица с данными о бронированиях"
+            tableName: booking
+            columns:
+              - column:
+                  remarks: "Айди бронирования, приходит извне"
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: booking_id_pk
+                    notNullConstraintName: booking_id_nn
+              - column:
+                  remarks: "Статус бронирования(PENDING_HOLD, HELD, PENDING_PAYMENT, CONFIRMED, FAILED)"
+                  name: status
+                  type: text
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: booking_status_nn
+              - column:
+                  remarks: "Итоговая сумма бронирования"
+                  name: total_price
+                  type: numeric(10, 2)
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: booking_total_price_nn
+              - column:
+                  remarks: "Валюта"
+                  name: currency
+                  type: char(3)
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: booking_currency_nn
+              - column:
+                  remarks: "Идентификатор корреляции саги, приходит извне"
+                  name: correlation_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: booking_correlation_id_nn
+              - column:
+                  remarks: "Время создания записи"
+                  name: created_at
+                  type: timestamptz
+                  defaultValueComputed: current_timestamp
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: booking_created_at_nn
+              - column:
+                  remarks: "Время последнего обновления записи"
+                  name: updated_at
+                  type: timestamptz

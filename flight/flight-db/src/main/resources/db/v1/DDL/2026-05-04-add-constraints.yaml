@@ -1,0 +1,70 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260504-add-airplane_type_total_seats_constraint
+      author: yakupov
+      changes:
+        - sql:
+            sql: |
+              ALTER TABLE airplane_type
+              ADD CONSTRAINT airplane_type_total_seats_check
+              CHECK (total_seats >= 0);
+
+  - changeSet:
+      id: 20260504-add-booking_total_price_constraint
+      author: yakupov
+      changes:
+        - sql:
+            sql: |
+              ALTER TABLE booking
+              ADD CONSTRAINT booking_total_price_check
+              CHECK (total_price > 0);
+
+  - changeSet:
+      id: 20260504-add-flight_scheduled_departure_scheduled_arrival_constraint
+      author: yakupov
+      changes:
+        - sql:
+            sql: |
+              ALTER TABLE flight
+              ADD CONSTRAINT flight_scheduled_departure_scheduled_arrival_check
+              CHECK (scheduled_departure <= scheduled_arrival);
+
+  - changeSet:
+      id: 20260504-add-flight_inventory_total_seats_constraint
+      author: yakupov
+      changes:
+        - sql:
+            sql: |
+              ALTER TABLE flight_inventory
+              ADD CONSTRAINT flight_inventory_total_seats_check
+              CHECK (total_seats >= 0 AND total_seats >= available_seats + held_seats);
+
+  - changeSet:
+      id: 20260504-add-flight_inventory_available_seats_constraint
+      author: yakupov
+      changes:
+        - sql:
+            sql: |
+              ALTER TABLE flight_inventory
+              ADD CONSTRAINT flight_inventory_available_seats_check
+              CHECK (available_seats >= 0);
+
+  - changeSet:
+      id: 20260504-add-flight_inventory_held_seats_constraint
+      author: yakupov
+      changes:
+        - sql:
+            sql: |
+              ALTER TABLE flight_inventory
+              ADD CONSTRAINT flight_inventory_held_seats_check
+              CHECK (held_seats >= 0);
+
+  - changeSet:
+      id: 20260504-add-route_airports_constraint
+      author: yakupov
+      changes:
+        - sql:
+            sql: |
+              ALTER TABLE route
+              ADD CONSTRAINT route_departure_airport_code_arrival_airport_code_check
+              CHECK (departure_airport_code <> arrival_airport_code);

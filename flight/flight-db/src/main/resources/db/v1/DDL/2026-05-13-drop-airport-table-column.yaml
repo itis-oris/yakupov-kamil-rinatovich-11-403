@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260513-drop-airport-country_code-column
+      author: yakupov
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: airport
+            constraintName: airport_country_code_fk
+
+        - dropColumn:
+            tableName: airport
+            columnName: country_code

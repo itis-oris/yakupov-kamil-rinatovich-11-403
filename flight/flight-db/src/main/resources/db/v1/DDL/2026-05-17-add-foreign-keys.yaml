@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260517-add-ticket_booking_id-fk
+      author: yakupov
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: ticket
+            baseColumnNames: booking_id
+            referencedTableName: booking
+            referencedColumnNames: id
+            constraintName: ticket_booking_id-fk
+
+  - changeSet:
+      id: 20260517-add-seat_reserved_booking_id-fk
+      author: yakupov
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: seat_reserved
+            baseColumnNames: held_by_booking_id
+            referencedTableName: booking
+            referencedColumnNames: id
+            constraintName: seat_reserved_booking_id-fk

@@ -1,0 +1,74 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260420-create-seat_reserved-table
+      author: yakupov
+      changes:
+        - createTable:
+            remarks: "Таблица с данными о занятых местах на конкретном рейсе"
+            tableName: seat_reserved
+            columns:
+              - column:
+                  remarks: "Айди записи"
+                  name: id
+                  type: uuid
+                  defaultValueComputed: "gen_random_uuid()"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: seat_reserved_id_pk
+                    notNullConstraintName: seat_reserved_id_nn
+              - column:
+                  remarks: "Айди рейса(seat_reserved(fk) -> flight(pk))"
+                  name: flight_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: seat_reserved_flight_id_nn
+              - column:
+                  remarks: "Айди места(seat_reserved(fk) -> seat(pk))"
+                  name: seat_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: seat_reserved_seat_id_nn
+              - column:
+                  remarks: "Статус места(HELD,SOLD,BLOCKED)"
+                  name: status
+                  type: text
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: seat_reserved_status_nn
+              - column:
+                  remarks: "Айди заказа, который удерживает место"
+                  name: held_by_booking_id
+                  type: uuid
+              - column:
+                  remarks: "Время, до которого активно удержание"
+                  name: held_until
+                  type: timestamptz
+
+  - changeSet:
+      id: 20260420-add-seat_reserved_flight_id-fk
+      author: yakupov
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: seat_reserved
+            baseColumnNames: flight_id
+            referencedTableName: flight
+            referencedColumnNames: id
+            constraintName: seat_reserved_flight_id_fk
+        - addForeignKeyConstraint:
+            baseTableName: seat_reserved
+            baseColumnNames: seat_id
+            referencedTableName: seat
+            referencedColumnNames: id
+            constraintName: seat_reserved_seat_id_fk
+
+  - changeSet:
+      id: 20260420-add-seat_reserved_flight_id-and-seat_id-uq
+      author: yakupov
+      changes:
+        - addUniqueConstraint:
+            tableName: seat_reserved
+            columnNames: flight_id, seat_id
+            constraintName: seat_reserved_flight_id-and-seat_id-uq

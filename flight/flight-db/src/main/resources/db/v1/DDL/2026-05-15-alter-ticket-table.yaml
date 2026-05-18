@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260515-drop-ticket_seat_id-nn-constraint
+      author: yakupov
+      changes:
+        - dropNotNullConstraint:
+            tableName: ticket
+            columnName: seat_id
+
+  - changeSet:
+      id: 20260504-create-ticket_created_at_id-index
+      author: yakupov
+      changes:
+        - createIndex:
+            tableName: ticket
+            indexName: idx_ticket_created_at_id
+            unique: true
+            columns:
+              - column:
+                  name: created_at
+              - column:
+                  name: id

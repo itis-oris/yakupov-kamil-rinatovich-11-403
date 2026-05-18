@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260420-create-airplane_type-table
+      author: yakupov
+      changes:
+        - createTable:
+            remarks: "Таблица с данными о типах самолетов"
+            tableName: airplane_type
+            columns:
+              - column:
+                  remarks: "Код самолета(319, 320)"
+                  name: code
+                  type: char(3)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: airplane_type_code_pk
+                    notNullConstraintName: airplane_type_code_nn
+              - column:
+                  remarks: "Производитель типа самолета(Airbus, Boeing)"
+                  name: manufacturer
+                  type: text
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: airplane_type_manufacturer_nn
+              - column:
+                  remarks: "Модель типа самолета(A320, 777)"
+                  name: model
+                  type: text
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: airplane_type_model_nn
+              - column:
+                  remarks: "Общее количество мест в самолете"
+                  name: total_seats
+                  type: smallint
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: airplane_total_seats_nn

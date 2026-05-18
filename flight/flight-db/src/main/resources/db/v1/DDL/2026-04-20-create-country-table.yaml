@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260420-create-country-table
+      author: yakupov
+      changes:
+        - createTable:
+            remarks: "Таблица с данными о странах"
+            tableName: country
+            columns:
+              - column:
+                  remarks: "Код страны(US, RU)"
+                  name: code
+                  type: char(2)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: country_code_pk
+                    notNullConstraintName: country_code_nn
+              - column:
+                  remarks: "Название страны"
+                  name: name
+                  type: text
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: country_name_nn

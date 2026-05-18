@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260502-alter-ticket-seat_number
+      author: yakupov
+      changes:
+        - dropColumn:
+            tableName: ticket
+            columnName: seat_number
+
+        - addColumn:
+            tableName: ticket
+            columns:
+              - column:
+                  name: seat_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: ticket_seat_id_nn
+
+  - changeSet:
+      id: 20260502-add-ticket-seat_id-fk
+      author: yakupov
+      changes:
+        - addForeignKeyConstraint:
+              baseTableName: ticket
+              baseColumnNames: seat_id
+              referencedTableName: seat
+              referencedColumnNames: id
+              constraintName: ticket_seat_id_fk

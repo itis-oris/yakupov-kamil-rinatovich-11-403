@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260427-alter-airplane_manufactured_year
+      author: yakupov
+      changes:
+        - modifyDataType:
+            tableName: airplane
+            columnName: manufactured_year
+            newDataType: integer
+
+  - changeSet:
+      id: 20260427-alter-airplane_type_total_seats
+      author: yakupov
+      changes:
+        - modifyDataType:
+            tableName: airplane_type
+            columnName: total_seats
+            newDataType: integer
+
+  - changeSet:
+      id: 20260427-alter-flight_inventory-columns
+      author: yakupov
+      changes:
+        - modifyDataType:
+            tableName: flight_inventory
+            columnName: total_seats
+            newDataType: integer
+        - modifyDataType:
+            tableName: flight_inventory
+            columnName: available_seats
+            newDataType: integer
+        - modifyDataType:
+            tableName: flight_inventory
+            columnName: held_seats
+            newDataType: integer

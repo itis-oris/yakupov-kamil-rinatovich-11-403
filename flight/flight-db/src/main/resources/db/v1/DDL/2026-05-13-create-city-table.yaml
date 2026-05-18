@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260513-create-city-table
+      author: yakupov
+      changes:
+        - createTable:
+            remarks: "Таблица с данными о городах"
+            tableName: city
+            columns:
+              - column:
+                  remarks: "Код города(MOW, NYC)"
+                  name: code
+                  type: varchar(3)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: city_code_pk
+                    notNullConstraintName: city_code_nn
+              - column:
+                  remarks: "Название города"
+                  name: name
+                  type: text
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: city_name_nn
+              - column:
+                  remarks: "Код страны из таблицы с информацией о странах(city(fk) -> country(pk))"
+                  name: country_code
+                  type: varchar(2)
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: city_country_code_nn
+
+  - changeSet:
+      id: 20260513-add-city-country_code-fk
+      author: yakupov
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: city
+            baseColumnNames: country_code
+            referencedTableName: country
+            referencedColumnNames: code
+            constraintName: city_country_code_fk

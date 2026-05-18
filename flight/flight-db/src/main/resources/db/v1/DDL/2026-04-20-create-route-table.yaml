@@ -1,0 +1,80 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260420-create-route-table
+      author: yakupov
+      changes:
+        - createTable:
+            remarks: "Таблица с данными о маршрутах авиакомпаний(!)"
+            tableName: route
+            columns:
+              - column:
+                  remarks: "Айди маршрута"
+                  name: id
+                  type: uuid
+                  defaultValueComputed: "gen_random_uuid()"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: route_id_pk
+                    notNullConstraintName: route_id_nn
+              - column:
+                  remarks: "Номер маршрута(S7 1025, SU100)"
+                  name: number
+                  type: text
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: route_number_nn
+                    unique: true
+                    uniqueConstraintName: route_number_uq
+              - column:
+                  remarks: "Код авиакомпании(route(fk) -> airline(pk))"
+                  name: airline_code
+                  type: char(2)
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: route_airline_code_nn
+              - column:
+                  remarks: "Код аэропорта вылета(route(fk) -> airport(pk))"
+                  name: departure_airport_code
+                  type: char(3)
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: route_departure_airport_code_nn
+              - column:
+                  remarks: "Код аэропорта прилета(route(fk) -> airport(pk))"
+                  name: arrival_airport_code
+                  type: char(3)
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: route_arrival_airport_code_nn
+              - column:
+                  remarks: "Является ли маршрут активным"
+                  name: is_active
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: route_is_active_nn
+
+  - changeSet:
+      id: 20260420-add-route-fk
+      author: yakupov
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: route
+            baseColumnNames: airline_code
+            referencedTableName: airline
+            referencedColumnNames: code
+            constraintName: route_airline_code_fk
+        - addForeignKeyConstraint:
+            baseTableName: route
+            baseColumnNames: departure_airport_code
+            referencedTableName: airport
+            referencedColumnNames: code
+            constraintName: route_departure_airport_code_fk
+        - addForeignKeyConstraint:
+            baseTableName: route
+            baseColumnNames: arrival_airport_code
+            referencedTableName: airport
+            referencedColumnNames: code
+            constraintName: route_arrival_airport_code_fk

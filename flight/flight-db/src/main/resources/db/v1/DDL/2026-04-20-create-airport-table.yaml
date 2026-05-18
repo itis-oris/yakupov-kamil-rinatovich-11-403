@@ -1,0 +1,72 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260420-create-airport-table
+      author: yakupov
+      changes:
+        - createTable:
+            remarks: "Таблица с данными об аэропортах"
+            tableName: airport
+            columns:
+              - column:
+                  remarks: "Код аэропорта(SVO, FRA)"
+                  name: code
+                  type: char(3)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: airport_code_pk
+                    notNullConstraintName: airport_code_nn
+              - column:
+                  remarks: "Название аэропорта"
+                  name: name
+                  type: text
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: airport_name_nn
+              - column:
+                  remarks: "Название города, в котором находится аэропорт"
+                  name: city
+                  type: text
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: airport_city_nn
+              - column:
+                  remarks: "Код страны из таблицы с информацией о странах (airport(fk) -> country(pk))"
+                  name: country_code
+                  type: char(2)
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: airport_country_code_nn
+              - column:
+                  remarks: "Часовой пояс аэропорта в виде идентификатора IANA(Europe/Moscow, Europe/Amsterdam)"
+                  name: timezone
+                  type: text
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: airport_timezone_nn
+              - column:
+                  remarks: "Широта расположения аэропорта"
+                  name: latitude
+                  type: numeric(8,5)
+              - column:
+                  remarks: "Долгота расположения аэропорта"
+                  name: longitude
+                  type: numeric(8,5)
+              - column:
+                  remarks: "Является ли аэропорт активным"
+                  name: is_active
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: airport_is_active_nn
+  - changeSet:
+      id: 20260420-add-airport-country_code-fk
+      author: yakupov
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: airport
+            baseColumnNames: country_code
+            referencedTableName: country
+            referencedColumnNames: code
+            constraintName: airport_country_code_fk

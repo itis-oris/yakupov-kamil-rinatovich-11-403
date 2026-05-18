@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2026-05-02-add-seat_reserved-updated_at-column
+      author: yakupov
+      changes:
+        - addColumn:
+            tableName: seat_reserved
+            columns:
+              - column:
+                  name: updated_at
+                  type: timestamptz
+
+  - changeSet:
+      id: 2026-05-02-drop-seat_reserved-held_until-column
+      author: yakupov
+      changes:
+        - dropColumn:
+            tableName: seat_reserved
+            columns:
+              - column:
+                  name: held_until

@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260415-drop-unique-password-hash-constarint
+      author: yakupov
+      changes:
+        - dropUniqueConstraint:
+            tableName: account
+            constraintName: account_password_hash_uq

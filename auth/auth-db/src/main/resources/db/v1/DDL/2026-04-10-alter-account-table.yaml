@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260410-remove-account-columns
+      author: yakupov
+      changes:
+        - dropColumn:
+            tableName: account
+            columnName: non_expired
+        - dropColumn:
+            tableName: account
+            columnName: non_locked
+        - dropColumn:
+            tableName: account
+            columnName: credentials_non_expired
+        - dropColumn:
+            tableName: account
+            columnName: enabled
+  - changeSet:
+      id: 20260410-add-account-status-column
+      author: yakupov
+      changes:
+        - addColumn:
+            tableName: account
+            columns:
+              - column:
+                  name: status
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: account_status_nn

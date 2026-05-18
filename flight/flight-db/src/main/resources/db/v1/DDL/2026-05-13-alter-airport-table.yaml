@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260513-airport-city-to-fk
+      author: yakupov
+      changes:
+        - renameColumn:
+            tableName: airport
+            oldColumnName: city
+            newColumnName: city_code
+            columnDataType: text
+
+        - modifyDataType:
+            tableName: airport
+            columnName: city_code
+            newDataType: varchar(3)
+
+        - addForeignKeyConstraint:
+            baseTableName: airport
+            baseColumnNames: city_code
+            referencedTableName: city
+            referencedColumnNames: code
+            constraintName: airport_city_code_fk

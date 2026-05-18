@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260514-add-booking_account_id-column
+      author: yakupov
+      changes:
+        - addColumn:
+            tableName: booking
+            columns:
+              - column:
+                  name: account_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: booking_account_id_nn

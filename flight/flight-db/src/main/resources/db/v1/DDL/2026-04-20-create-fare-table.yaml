@@ -1,0 +1,75 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260420-create-fare-table
+      author: yakupov
+      changes:
+        - createTable:
+            remarks: "Таблица с данными о тарифах"
+            tableName: fare
+            columns:
+              - column:
+                  remarks: "Айди тарифа"
+                  name: id
+                  type: uuid
+                  defaultValueComputed: "gen_random_uuid()"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: fare_id_pk
+                    notNullConstraintName: fare_id_nn
+              - column:
+                  remarks: "Код авиакомпании(fare(fk) -> airline(pk))"
+                  name: airline_code
+                  type: char(2)
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: fare_airline_code_nn
+              - column:
+                  remarks: "Класс тарифа(ECONOMY, BUSINESS, FIRST)"
+                  name: cabin_class
+                  type: text
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: fare_cabin_class_nn
+              - column:
+                  remarks: "Название тарифа"
+                  name: name
+                  type: text
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: fare_name_nn
+              - column:
+                  remarks: "Разрешен ли багаж"
+                  name: baggage_included
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: fare_baggage_included_nn
+              - column:
+                  remarks: "Разрешен ли возврат"
+                  name: is_refundable
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: fare_is_refundable_nn
+              - column:
+                  remarks: "Является ли тариф активным"
+                  name: is_active
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: fare_is_active_nn
+
+  - changeSet:
+      id: 20260420-add-fare-airline_code-fk
+      author: yakupov
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: fare
+            baseColumnNames: airline_code
+            referencedTableName: airline
+            referencedColumnNames: code
+            constraintName: fare_airline_code_fk

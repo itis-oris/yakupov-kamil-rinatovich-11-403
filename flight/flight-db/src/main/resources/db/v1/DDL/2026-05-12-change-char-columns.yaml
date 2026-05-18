@@ -1,0 +1,110 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260512-alter-country-code-to-varchar
+      author: yakupov
+      changes:
+        - modifyDataType:
+            tableName: country
+            columnName: code
+            newDataType: varchar(2)
+
+  - changeSet:
+      id: 20260512-alter-airline-columns-to-varchar
+      author: yakupov
+      changes:
+        - modifyDataType:
+            tableName: airline
+            columnName: code
+            newDataType: varchar(2)
+        - modifyDataType:
+            tableName: airline
+            columnName: country_code
+            newDataType: varchar(2)
+
+  - changeSet:
+      id: 20260512-alter-airport-columns-to-varchar
+      author: yakupov
+      changes:
+        - modifyDataType:
+            tableName: airport
+            columnName: code
+            newDataType: varchar(3)
+        - modifyDataType:
+            tableName: airport
+            columnName: country_code
+            newDataType: varchar(2)
+
+  - changeSet:
+      id: 20260512-alter-airplane_type-code-to-varchar
+      author: yakupov
+      changes:
+        - modifyDataType:
+            tableName: airplane_type
+            columnName: code
+            newDataType: varchar(3)
+
+  - changeSet:
+      id: 20260512-alter-airplane-columns-to-varchar
+      author: yakupov
+      changes:
+        - modifyDataType:
+            tableName: airplane
+            columnName: airplane_type_code
+            newDataType: varchar(3)
+        - modifyDataType:
+            tableName: airplane
+            columnName: airline_code
+            newDataType: varchar(2)
+
+  - changeSet:
+      id: 20260512-alter-route-columns-to-varchar
+      author: yakupov
+      changes:
+        - modifyDataType:
+            tableName: route
+            columnName: airline_code
+            newDataType: varchar(2)
+        - modifyDataType:
+            tableName: route
+            columnName: departure_airport_code
+            newDataType: varchar(3)
+        - modifyDataType:
+            tableName: route
+            columnName: arrival_airport_code
+            newDataType: varchar(3)
+
+  - changeSet:
+      id: 20260512-alter-seat-airplane_type_code-to-varchar
+      author: yakupov
+      changes:
+        - modifyDataType:
+            tableName: seat
+            columnName: airplane_type_code
+            newDataType: varchar(3)
+
+  - changeSet:
+      id: 20260512-alter-fare-airline_code-to-varchar
+      author: yakupov
+      changes:
+        - modifyDataType:
+            tableName: fare
+            columnName: airline_code
+            newDataType: varchar(2)
+
+  - changeSet:
+      id: 20260512-alter-flight-airplane_type_code-to-varchar
+      author: yakupov
+      changes:
+        - modifyDataType:
+            tableName: flight
+            columnName: airplane_type_code
+            newDataType: varchar(3)
+
+  - changeSet:
+      id: 20260512-alter-ticket-document_country_code-to-varchar
+      author: yakupov
+      changes:
+        - modifyDataType:
+            tableName: ticket
+            columnName: document_country_code
+            newDataType: varchar(2)

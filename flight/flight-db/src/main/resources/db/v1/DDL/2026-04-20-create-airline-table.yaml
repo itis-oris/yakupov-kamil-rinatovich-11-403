@@ -1,0 +1,50 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260420-create-airline-table
+      author: yakupov
+      changes:
+        - createTable:
+            remarks: "Таблица с данными об авиакомпаниях"
+            tableName: airline
+            columns:
+              - column:
+                  remarks: "Код авиакомпании(S7, EK)"
+                  name: code
+                  type: char(2)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: airline_code_pk
+                    notNullConstraintName: airline_code_nn
+              - column:
+                  remarks: "Название авиакомпании"
+                  name: name
+                  type: text
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: airline_name_nn
+              - column:
+                  remarks: "Код страны из таблицы с информацией о странах(airline(fk) -> country(pk))"
+                  name: country_code
+                  type: char(2)
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: airline_country_code_nn
+              - column:
+                  remarks: "Является ли авиакомпания активной"
+                  name: is_active
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: airline_is_active_nn
+  - changeSet:
+      id: 20260420-add-airline-country_code-fk
+      author: yakupov
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: airline
+            baseColumnNames: country_code
+            referencedTableName: country
+            referencedColumnNames: code
+            constraintName: airline_country_code_fk

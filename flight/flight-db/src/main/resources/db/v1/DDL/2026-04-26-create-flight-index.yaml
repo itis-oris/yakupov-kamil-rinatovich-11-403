@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260426-create-flight-index
+      author: yakupov
+      changes:
+        - createIndex:
+            indexName: idx_flight_cursor
+            tableName: flight
+            columns:
+              - column:
+                  name: scheduled_departure
+                  descending: false
+              - column:
+                  name: id
+                  descending: false
+
+  - changeSet:
+      id: 20260426-create-flight_inventory_price_asc-index
+      author: yakupov
+      changes:
+        - createIndex:
+            indexName: idx_flight_inventory_price_asc_cursor
+            tableName: flight_inventory
+            columns:
+              - column:
+                  name: price
+                  descending: false
+              - column:
+                  name: flight_id
+                  descending: false
+
+  - changeSet:
+      id: 20260426-create-flight_inventory_price_desc-index
+      author: yakupov
+      changes:
+        - createIndex:
+            indexName: idx_flight_inventory_price_desc_cursor
+            tableName: flight_inventory
+            columns:
+              - column:
+                  name: price
+                  descending: true
+              - column:
+                  name: flight_id
+                  descending: true

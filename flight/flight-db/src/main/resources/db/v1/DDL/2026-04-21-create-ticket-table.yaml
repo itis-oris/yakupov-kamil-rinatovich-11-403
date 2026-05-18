@@ -1,0 +1,159 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260421-create-ticket-table
+      author: yakupov
+      changes:
+        - createTable:
+            remarks: "Таблица с данными билетов"
+            tableName: ticket
+            columns:
+              - column:
+                  remarks: "Айди записи"
+                  name: id
+                  type: uuid
+                  defaultValueComputed: "gen_random_uuid()"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: ticket_id_pk
+                    notNullConstraintName: ticket_id_nn
+              - column:
+                  remarks: "Статус билета(ISSUED, CANCELLED, REFUNDED)"
+                  name: status
+                  type: text
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: ticket_status_nn
+              - column:
+                  remarks: "Айди бронирования, приходит извне"
+                  name: booking_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: ticket_booking_id_nn
+              - column:
+                  remarks: "Айди рейса(ticket(fk) -> flight(pk))"
+                  name: flight_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: ticket_flight_id_nn
+              - column:
+                  remarks: "Имя пассажира"
+                  name: passenger_first_name
+                  type: text
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: ticket_passenger_first_name_nn
+              - column:
+                  remarks: "Фамилия пассажира"
+                  name: passenger_last_name
+                  type: text
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: ticket_passenger_last_name_nn
+              - column:
+                  remarks: "Дата рождения пассажира"
+                  name: passenger_date_of_birth
+                  type: date
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: ticket_passenger_date_of_birth_nn
+              - column:
+                  remarks: "Гендер пассажира"
+                  name: passenger_gender
+                  type: text
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: ticket_passenger_gender_nn
+              - column:
+                  remarks: "Тип документа пассажира(PASSPORT, ID_CARD)"
+                  name: document_type
+                  type: text
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: ticket_document_type_nn
+              - column:
+                  remarks: "Номер документа(1234 567890)"
+                  name: document_number
+                  type: text
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: ticket_document_number_nn
+              - column:
+                  remarks: "Страна, в которой был выдан документ"
+                  name: document_country_code
+                  type: char(2)
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: ticket_document_country_code_nn
+              - column:
+                  remarks: "Тип пассажира(ADULT, CHILD, INFANT)"
+                  name: passenger_type
+                  type: text
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: ticket_passenger_type_nn
+              - column:
+                  remarks: "Айди тарифа(ticket(fk) -> fare(pk))"
+                  name: fare_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: ticket_fare_id_nn
+              - column:
+                  remarks: "Номер места(12A, 23F)"
+                  name: seat_number
+                  type: text
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: ticket_seat_number_nn
+              - column:
+                  remarks: "Итоговая цена билета"
+                  name: total_price
+                  type: numeric(10, 2)
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: ticket_total_price_nn
+              - column:
+                  remarks: "Валюта"
+                  name: currency
+                  type: char(3)
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: ticket_currency_nn
+              - column:
+                  remarks: "Время создания записи"
+                  name: created_at
+                  type: timestamptz
+                  defaultValueComputed: current_timestamp
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: ticket_created_at_nn
+              - column:
+                  remarks: "Время последнего обновления записи"
+                  name: updated_at
+                  type: timestamptz
+
+  - changeSet:
+      id: 20260421-add-ticket-fk
+      author: yakupov
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: ticket
+            baseColumnNames: flight_id
+            referencedTableName: flight
+            referencedColumnNames: id
+            constraintName: ticket_flight_id_fk
+        - addForeignKeyConstraint:
+            baseTableName: ticket
+            baseColumnNames: document_country_code
+            referencedTableName: country
+            referencedColumnNames: code
+            constraintName: ticket_document_country_code_fk
+        - addForeignKeyConstraint:
+            baseTableName: ticket
+            baseColumnNames: fare_id
+            referencedTableName: fare
+            referencedColumnNames: id
+            constraintName: ticket_fare_id_fk

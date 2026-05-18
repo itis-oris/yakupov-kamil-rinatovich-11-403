@@ -1,0 +1,99 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260420-create-flight-table
+      author: yakupov
+      changes:
+        - createTable:
+            remarks: "Таблица с данными о конкретных рейсах"
+            tableName: flight
+            columns:
+              - column:
+                  remarks: "Айди рейса"
+                  name: id
+                  type: uuid
+                  defaultValueComputed: "gen_random_uuid()"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: flight_id_pk
+                    notNullConstraintName: flight_id_nn
+              - column:
+                  remarks: "Айди маршрута(flight(fk) -> route(pk))"
+                  name: route_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: flight_route_id_nn
+              - column:
+                  remarks: "Код типа самолета(flight(fk) -> airplane_type(pk))"
+                  name: airplane_type_code
+                  type: char(3)
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: flight_airplane_type_code_nn
+              - column:
+                  remarks: "Айди борта(flight(fk) -> airplane(pk))"
+                  name: airplane_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: flight_airplane_id_nn
+              - column:
+                  remarks: "Запланированное время отправления"
+                  name: scheduled_departure
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: flight_scheduled_departure_nn
+              - column:
+                  remarks: "Запланированное время прибывания"
+                  name: scheduled_arrival
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: flight_scheduled_arrival_nn
+              - column:
+                  remarks: "Реальное время отправления"
+                  name: actual_departure
+                  type: timestamptz
+              - column:
+                  remarks: "Реальное время прибывания"
+                  name: actual_arrival
+                  type: timestamptz
+              - column:
+                  remarks: "Статус рейса(SCHEDULED,ON_TIME,DELAYED,BOARDING,DEPARTED,ARRIVED,CANCELLED,DIVERTED)"
+                  name: status
+                  type: text
+                  defaultValue: "SCHEDULED"
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: flight_status_nn
+              - column:
+                  name: updated_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: flight_updated_at_nn
+
+  - changeSet:
+      id: 20260420-add-flight-fk
+      author: yakupov
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: flight
+            baseColumnNames: route_id
+            referencedTableName: route
+            referencedColumnNames: id
+            constraintName: flight_route_id_fk
+        - addForeignKeyConstraint:
+            baseTableName: flight
+            baseColumnNames: airplane_type_code
+            referencedTableName: airplane_type
+            referencedColumnNames: code
+            constraintName: flight_airplane_type_code_fk
+        - addForeignKeyConstraint:
+            baseTableName: flight
+            baseColumnNames: airplane_id
+            referencedTableName: airplane
+            referencedColumnNames: id
+            constraintName: flight_airplane_id_fk

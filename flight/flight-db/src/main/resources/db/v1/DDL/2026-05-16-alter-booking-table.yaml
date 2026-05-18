@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260516-drop-booking-correlation_id-column
+      author: yakupov
+      changes:
+        - dropColumn:
+            tableName: booking
+            columnName: correlation_id

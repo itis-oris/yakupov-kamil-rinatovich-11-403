@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260429-drop-flight_inventory-currency-column
+      author: yakupov
+      changes:
+        - dropColumn:
+            tableName: flight_inventory
+            columnName: currency
+
+  - changeSet:
+      id: 20260429-drop-booking-currency-column
+      author: yakupov
+      changes:
+        - dropColumn:
+            tableName: booking
+            columnName: currency
+
+  - changeSet:
+      id: 20260429-drop-ticket-currency-column
+      author: yakupov
+      changes:
+        - dropColumn:
+            tableName: ticket
+            columnName: currency

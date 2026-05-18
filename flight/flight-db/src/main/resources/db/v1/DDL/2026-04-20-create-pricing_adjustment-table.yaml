@@ -1,0 +1,72 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260420-create-pricing_adjustment-table
+      author: yakupov
+      changes:
+        - createTable:
+            remarks: "Таблица с данными о каких-либо изменениях в цене из-за спроса/времени на конкретный рейс и конкретный тариф"
+            tableName: pricing_adjustment
+            columns:
+              - column:
+                  remarks: "Айди записи"
+                  name: id
+                  type: uuid
+                  defaultValueComputed: "gen_random_uuid()"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: pricing_adjustment_id_pk
+                    notNullConstraintName: pricing_adjustment_id_nn
+              - column:
+                  remarks: "Айди рейса(pricing_adjustment(fk) -> flight(pk))"
+                  name: flight_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: pricing_adjustment_flight_id_nn
+              - column:
+                  remarks: "Айди тарифа(pricing_adjustment(fk) -> fare(pk))"
+                  name: fare_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: pricing_adjustment_fare_id_nn
+              - column:
+                  remarks: "Тип изменения(PERCENT, ABSOLUTE) в процентах или абсолютная величина"
+                  name: type
+                  type: text
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: pricing_adjustment_type_nn
+              - column:
+                  remarks: "Значения изменения в цене"
+                  name: value
+                  type: numeric(10, 2)
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: pricing_adjustment_value_nn
+              - column:
+                  remarks: "Является ли изменение в цене актуальным"
+                  name: is_active
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: pricing_adjustment_is_active_nn
+
+  - changeSet:
+      id: 20260420-add-pricing_adjustment-fk
+      author: yakupov
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: pricing_adjustment
+            baseColumnNames: flight_id
+            referencedTableName: flight
+            referencedColumnNames: id
+            constraintName: pricing_adjustment_flight_id_fk
+        - addForeignKeyConstraint:
+            baseTableName: pricing_adjustment
+            baseColumnNames: fare_id
+            referencedTableName: fare
+            referencedColumnNames: id
+            constraintName: pricing_adjustment_fare_id_fk

@@ -1,0 +1,68 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260420-create-pricing_rule-table
+      author: yakupov
+      changes:
+        - createTable:
+            remarks: "Таблица с данными о правилах изменения цены на основе типа пассажира"
+            tableName: pricing_rule
+            columns:
+              - column:
+                  remarks: "Айди записи"
+                  name: id
+                  type: uuid
+                  defaultValueComputed: "gen_random_uuid()"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: pricing_rule_id_pk
+                    notNullConstraintName: pricing_rule_id_nn
+              - column:
+                  remarks: "Айди тарифа(pricing_rule(fk) -> fare(pk))"
+                  name: fare_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: pricing_rule_fare_id_nn
+              - column:
+                  remarks: "Тип пассажира(ADULT, CHILD, INFANT)"
+                  name: passenger_type
+                  type: text
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: pricing_rule_passenger_type_nn
+              - column:
+                  remarks: "Множитель изменения цены"
+                  name: multiplier
+                  type: numeric(5, 2)
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: pricing_rule_multiplier_nn
+              - column:
+                  remarks: "Является ли изменение в цене актуальным"
+                  name: is_active
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: pricing_rule_is_active_nn
+
+  - changeSet:
+      id: 20260420-add-pricing_rule_fare_id-fk
+      author: yakupov
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: pricing_rule
+            baseColumnNames: fare_id
+            referencedTableName: fare
+            referencedColumnNames: id
+            constraintName: pricing_rule_fare_id_fk
+
+  - changeSet:
+      id: 20260420-add-pricing_rule_fare_id-and-passenger_type-uq
+      author: yakupov
+      changes:
+        - addUniqueConstraint:
+            tableName: pricing_rule
+            columnNames: fare_id, passenger_type
+            constraintName: pricing_rule_fare_id-and-passenger_type-uq

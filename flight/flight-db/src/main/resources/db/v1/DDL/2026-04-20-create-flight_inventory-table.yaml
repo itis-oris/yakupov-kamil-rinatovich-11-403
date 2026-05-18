@@ -1,0 +1,100 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260420-create-flight_inventory-table
+      author: yakupov
+      changes:
+        - createTable:
+            remarks: "Таблица с данными о количестве доступных мест на конкретном рейсе в конкретном классе"
+            tableName: flight_inventory
+            columns:
+              - column:
+                  remarks: "Айди записи"
+                  name: id
+                  type: uuid
+                  defaultValueComputed: "gen_random_uuid()"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: flight_inventory_id_pk
+                    notNullConstraintName: flight_inventory_id_nn
+              - column:
+                  remarks: "Айди рейса(flight_inventory(fk) -> flight(pk))"
+                  name: flight_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: flight_inventory_flight_id_nn
+              - column:
+                  remarks: "Класс (ECONOMY, BUSINESS, FIRST)"
+                  name: cabin_class
+                  type: text
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: flight_inventory_cabin_class_nn
+              - column:
+                  remarks: "Сколько всего мест на конкретном рейсе в конкретном классе"
+                  name: total_seats
+                  type: smallint
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: flight_inventory_total_seats_nn
+              - column:
+                  remarks: "Сколько доступно на данный момент мест на конкретном рейсе в конкретном классе"
+                  name: available_seats
+                  type: smallint
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: flight_inventory_available_seats_nn
+              - column:
+                  remarks: "Сколько удержано на данный момент мест на конкретном рейсе в конкретном классе"
+                  name: held_seats
+                  type: smallint
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: flight_inventory_held_seats_nn
+              - column:
+                  remarks: "Базовая цена на конкретном рейсе в конкретном классе за место"
+                  name: price
+                  type: numeric(10, 2)
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: flight_inventory_price_nn
+              - column:
+                  remarks: "Валюта"
+                  name: currency
+                  type: char(3)
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: flight_inventory_currency_nn
+              - column:
+                  remarks: "Время создания записи"
+                  name: created_at
+                  type: timestamptz
+                  defaultValueComputed: current_timestamp
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: flight_inventory_created_at_nn
+              - column:
+                  remarks: "Время последнего обновления записи"
+                  name: updated_at
+                  type: timestamptz
+
+  - changeSet:
+      id: 20260420-add-flight_inventory_flight_id-fk
+      author: yakupov
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: flight_inventory
+            baseColumnNames: flight_id
+            referencedTableName: flight
+            referencedColumnNames: id
+            constraintName: flight_inventory_flight_id_fk
+
+  - changeSet:
+      id: 20260420-add-flight_inventory_flight_id-and-cabin_class-uq
+      author: yakupov
+      changes:
+        - addUniqueConstraint:
+            tableName: flight_inventory
+            columnNames: flight_id, cabin_class
+            constraintName: flight_inventory_flight_id_cabin_class-uq

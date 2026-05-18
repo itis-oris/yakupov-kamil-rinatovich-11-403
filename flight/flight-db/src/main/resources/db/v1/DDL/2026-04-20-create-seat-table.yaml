@@ -1,0 +1,83 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260420-create-seat-table
+      author: yakupov
+      changes:
+        - createTable:
+            remarks: "Таблица с данными о конкретном месте в самолете"
+            tableName: seat
+            columns:
+              - column:
+                  remarks: "Айди записи"
+                  name: id
+                  type: uuid
+                  defaultValueComputed: "gen_random_uuid()"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: seat_id_pk
+                    notNullConstraintName: seat_id_nn
+              - column:
+                  remarks: "Код типа самолета(seat(fk) -> airplane_type(pk))"
+                  name: airplane_type_code
+                  type: char(3)
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: seat_airplane_type_code_nn
+              - column:
+                  remarks: "Номер места(12A, 23F)"
+                  name: number
+                  type: text
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: seat_number_nn
+              - column:
+                  remarks: "Класс места(ECONOMY, BUSINESS, FIRST)"
+                  name: cabin_class
+                  type: text
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: seat_cabin_class_nn
+              - column:
+                  remarks: "Тип места(WINDOW, MIDDLE, AISLE)"
+                  name: type
+                  type: text
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: seat_type_nn
+              - column:
+                  remarks: "Есть ли зона для ног"
+                  name: has_extra_legroom
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: seat_has_extra_legroom_nn
+              - column:
+                  remarks: "Находится ли место в ряду аварийного выхода"
+                  name: is_exit_row
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+                    notNullConstraintName: seat_is_exit_row_nn
+
+  - changeSet:
+      id: 20260420-add-seat-airplane_type_code-fk
+      author: yakupov
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: seat
+            baseColumnNames: airplane_type_code
+            referencedTableName: airplane_type
+            referencedColumnNames: code
+            constraintName: seat_airplane_type_code_fk
+
+  - changeSet:
+      id: 20260420-add-seat-airplane_type_code-and-number-uq
+      author: yakupov
+      changes:
+        - addUniqueConstraint:
+            tableName: seat
+            columnNames: airplane_type_code, number
+            constraintName: seat-airplane_type_code-and-number-uq
