@@ -1,7 +1,7 @@
 package com.arsaka.referencedata.repository;
 
 import com.arsaka.common.FlightStatus;
-import com.arsaka.flightsearch.model.Route;
+import com.arsaka.flight.model.Route;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,19 +10,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface RouteAdminRepository extends JpaRepository<Route, UUID> {
-
-
-    @Query("""
-            SELECT r FROM Route r
-            WHERE r.airline.code = :airlineCode
-            AND r.active = :isActive
-            ORDER BY r.number
-            """)
-    List<Route> findByAirlineCodeAndIsActive(
-            @Param("airlineCode") String airlineCode,
-            @Param("isActive") boolean isActive
-    );
-
 
     @Query("""
             SELECT r FROM Route r

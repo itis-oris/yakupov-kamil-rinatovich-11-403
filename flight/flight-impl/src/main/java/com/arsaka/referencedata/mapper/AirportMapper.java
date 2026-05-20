@@ -1,7 +1,7 @@
 package com.arsaka.referencedata.mapper;
 
-import com.arsaka.flightsearch.dto.FlightRecord;
-import com.arsaka.flightsearch.dto.FlightSearchRecord;
+import com.arsaka.flight.dto.FlightRecord;
+import com.arsaka.flight.dto.FlightSearchRecord;
 import com.arsaka.referencedata.model.Airport;
 import com.arsaka.search.response.dto.FlightsSearchAirport;
 import org.mapstruct.Mapper;

@@ -1,7 +1,7 @@
 package com.arsaka.booking.util;
 
 import com.arsaka.booking.dto.TicketSearchRecord;
-import com.arsaka.flightsearch.exception.CursorDecodeException;
+import com.arsaka.flight.exception.CursorDecodeException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.StandardCharsets;

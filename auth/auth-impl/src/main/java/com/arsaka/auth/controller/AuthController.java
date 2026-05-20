@@ -56,7 +56,7 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@NotBlank @CookieValue(REFRESH_TOKEN_COOKIE_NAME) String requestRefreshToken) {
         service.logout(requestRefreshToken);
-        return ResponseEntity.noContent().build();
+        return setEmptyCookie();
     }
 
     @PostMapping("/validate")
@@ -85,6 +85,30 @@ public class AuthController {
                 .build();
 
         return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
+                .header(HttpHeaders.SET_COOKIE, accessCookie.toString())
+                .build();
+    }
+
+    private ResponseEntity<Void> setEmptyCookie() {
+
+        ResponseCookie refreshCookie = ResponseCookie.from(REFRESH_TOKEN_COOKIE_NAME, "")
+                .httpOnly(true)
+                //.secure(true)
+                .path("/")
+                .maxAge(0)
+                .sameSite("Strict")
+                .build();
+
+        ResponseCookie accessCookie = ResponseCookie.from(ACCESS_TOKEN_COOKIE_NAME, "tokenCouple.accessToken()")
+                .httpOnly(true)
+                //.secure(true)
+                .path("/")
+                .maxAge(0)
+                .sameSite("Strict")
+                .build();
+
+        return ResponseEntity.noContent()
                 .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
                 .header(HttpHeaders.SET_COOKIE, accessCookie.toString())
                 .build();

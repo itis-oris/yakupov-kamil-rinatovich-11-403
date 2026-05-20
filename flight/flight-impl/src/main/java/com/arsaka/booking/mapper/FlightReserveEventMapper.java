@@ -4,7 +4,7 @@ import com.arsaka.common.CabinClass;
 import com.arsaka.common.PassengerType;
 import com.arsaka.event.FlightsHoldEventRequest;
 import com.arsaka.event.dto.FlightHold;
-import com.arsaka.flightsearch.service.FlightInventoryService;
+import com.arsaka.flight.service.FlightInventoryService;
 import com.arsaka.booking.dto.FlightHoldDto;
 import com.arsaka.pricing.service.FareService;
 import com.arsaka.referencedata.exception.SeatCabinClassException;

@@ -2,7 +2,7 @@ package com.arsaka.pricing.mapper;
 
 import com.arsaka.create.request.CreatePricingAdjustmentRequest;
 import com.arsaka.create.response.PricingAdjustmentResponse;
-import com.arsaka.flightsearch.model.Flight;
+import com.arsaka.flight.model.Flight;
 import com.arsaka.pricing.model.Fare;
 import com.arsaka.pricing.model.PricingAdjustment;
 import org.mapstruct.Mapper;

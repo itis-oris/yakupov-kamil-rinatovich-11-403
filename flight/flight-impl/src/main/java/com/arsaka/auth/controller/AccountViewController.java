@@ -6,6 +6,7 @@ import com.arsaka.search.request.dto.TicketStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,10 @@ public class AccountViewController {
         AccountResponse account = authServiceClient.findAccountById(accountId);
         model.addAttribute("account",          account);
         model.addAttribute("isAuthenticated",  true);
+        model.addAttribute("isAdmin",
+                SecurityContextHolder.getContext().getAuthentication()
+                        .getAuthorities().stream()
+                        .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")));
         return "account/profile";
     }
 

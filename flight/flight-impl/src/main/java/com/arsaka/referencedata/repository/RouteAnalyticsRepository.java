@@ -1,6 +1,6 @@
 package com.arsaka.referencedata.repository;
 
-import com.arsaka.flightsearch.model.Route;
+import com.arsaka.flight.model.Route;
 import com.arsaka.referencedata.model.Airport;
 import com.arsaka.referencedata.model.City;
 import com.arsaka.referencedata.model.Country;

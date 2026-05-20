@@ -1,7 +1,7 @@
 package com.arsaka.pricing.service;
 
 import com.arsaka.common.PassengerType;
-import com.arsaka.flightsearch.dto.FlightRecord;
+import com.arsaka.flight.dto.FlightRecord;
 import com.arsaka.booking.dto.FlightHoldDto;
 import com.arsaka.pricing.dto.FlightPricingRecord;
 import com.arsaka.pricing.dto.PricingAdjRecord;

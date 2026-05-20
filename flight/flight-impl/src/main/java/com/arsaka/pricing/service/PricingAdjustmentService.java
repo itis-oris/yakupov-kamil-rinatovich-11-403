@@ -1,9 +1,11 @@
 package com.arsaka.pricing.service;
 
+import com.arsaka.search.response.AdminPage;
+import com.arsaka.search.request.dto.AdminPageRequest;
 import com.arsaka.create.request.CreatePricingAdjustmentRequest;
 import com.arsaka.create.response.PricingAdjustmentResponse;
-import com.arsaka.flightsearch.model.Flight;
-import com.arsaka.flightsearch.service.FlightService;
+import com.arsaka.flight.model.Flight;
+import com.arsaka.flight.service.FlightService;
 import com.arsaka.pricing.exception.PricingAdjustmentAlreadyExistsException;
 import com.arsaka.pricing.exception.PricingAdjustmentNotFoundException;
 import com.arsaka.pricing.mapper.PricingAdjustmentMapper;
@@ -13,9 +15,14 @@ import com.arsaka.pricing.repository.PricingAdjustmentRepository;
 import com.arsaka.updaterequest.UpdatePricingAdjustmentRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -82,5 +89,35 @@ public class PricingAdjustmentService {
     public void delete(UUID id) {
         PricingAdjustment pricingAdjustment = findById(id);
         pricingAdjustment.setActive(false);
+    }
+
+    @Transactional
+    public AdminPage<PricingAdjustmentResponse> findAdjustments(
+            UUID flightId,
+            UUID fareId,
+            AdminPageRequest pageReq
+    ) {
+        Specification<PricingAdjustment> spec = Specification.where(null);
+
+        if (flightId != null) {
+            spec = spec.and((root, q, cb) ->
+                    cb.equal(root.get("flight").get("id"), flightId));
+        }
+        if (fareId != null) {
+            spec = spec.and((root, q, cb) ->
+                    cb.equal(root.get("fare").get("id"), fareId));
+        }
+
+        Page<PricingAdjustment> page = repository.findAll(
+                spec,
+                PageRequest.of(pageReq.page(), pageReq.size(), Sort.by("flight"))
+        );
+
+        List<PricingAdjustmentResponse> content = page.getContent()
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+
+        return AdminPage.of(content, pageReq, page.getTotalElements());
     }
 }

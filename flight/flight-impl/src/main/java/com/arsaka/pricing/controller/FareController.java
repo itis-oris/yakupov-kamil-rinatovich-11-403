@@ -1,5 +1,8 @@
 package com.arsaka.pricing.controller;
 
+import com.arsaka.search.response.AdminPage;
+import com.arsaka.search.request.dto.AdminPageRequest;
+import com.arsaka.common.CabinClass;
 import com.arsaka.create.request.CreateFareRequest;
 import com.arsaka.create.response.FareResponse;
 import com.arsaka.pricing.service.FareService;
@@ -38,5 +41,16 @@ public class FareController {
     ) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<AdminPage<FareResponse>> listFares(
+            @RequestParam(required = false) String airlineCode,
+            @RequestParam(required = false) CabinClass cabinClass,
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size
+    ) {
+        AdminPage<FareResponse> response = service.findFares(airlineCode, cabinClass, AdminPageRequest.of(page, size));
+        return ResponseEntity.ok(response);
     }
 }

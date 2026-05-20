@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum AccountRole {
     USER("user"),
-    FLIGHT_MANAGER("flight manager"),
-    HOTEL_MANAGER("hotel manager"),
     ADMIN("admin");
 
 

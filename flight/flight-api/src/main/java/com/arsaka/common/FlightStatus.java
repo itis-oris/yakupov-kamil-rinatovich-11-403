@@ -22,4 +22,13 @@ public enum FlightStatus {
     public String getValue() {
         return value;
     }
+
+    public static FlightStatus fromValue(String value) {
+        for (FlightStatus status : values()) {
+            if (status.value.equalsIgnoreCase(value)) {
+                return status;
+            }
+        }
+        throw new IllegalArgumentException("Unknown Flight status: %s".formatted(value));
+    }
 }

@@ -51,7 +51,8 @@ public class AuthProxyController {
     public ResponseEntity<Void> logout(
             @NotBlank @CookieValue("refreshToken") String refreshToken
     ) {
-        return authServiceClient.logout(refreshToken);
+        ResponseEntity<Void> response = authServiceClient.logout(refreshToken);
+        return proxyWithCookies(response);
     }
 
     private <T> ResponseEntity<T> proxyWithCookies(ResponseEntity<T> authResponse) {

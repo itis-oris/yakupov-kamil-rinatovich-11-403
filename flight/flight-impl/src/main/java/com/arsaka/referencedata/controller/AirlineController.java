@@ -1,5 +1,7 @@
 package com.arsaka.referencedata.controller;
 
+import com.arsaka.search.response.AdminPage;
+import com.arsaka.search.request.dto.AdminPageRequest;
 import com.arsaka.create.request.CreateAirlineRequest;
 import com.arsaka.create.response.AirlineResponse;
 import com.arsaka.referencedata.service.AirlineService;
@@ -41,5 +43,16 @@ public class AirlineController {
     ) {
         service.delete(code);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<AdminPage<AirlineResponse>> listAirlines(
+            @RequestParam(required = false) String countryCode,
+            @RequestParam(required = false) Boolean active,
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size
+    ) {
+        AdminPage<AirlineResponse> response =  service.findAirlines(countryCode, active, AdminPageRequest.of(page, size));
+        return ResponseEntity.ok(response);
     }
 }

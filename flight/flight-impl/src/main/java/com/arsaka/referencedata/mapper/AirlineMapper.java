@@ -2,7 +2,7 @@ package com.arsaka.referencedata.mapper;
 
 import com.arsaka.create.request.CreateAirlineRequest;
 import com.arsaka.create.response.AirlineResponse;
-import com.arsaka.flightsearch.dto.FlightRecord;
+import com.arsaka.flight.dto.FlightRecord;
 import com.arsaka.referencedata.model.Airline;
 import com.arsaka.referencedata.model.Country;
 import com.arsaka.search.response.dto.FlightsSearchAirline;

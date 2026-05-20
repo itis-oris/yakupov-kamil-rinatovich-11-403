@@ -1,5 +1,7 @@
 package com.arsaka.pricing.controller;
 
+import com.arsaka.search.response.AdminPage;
+import com.arsaka.search.request.dto.AdminPageRequest;
 import com.arsaka.create.request.CreatePricingRuleRequest;
 import com.arsaka.create.response.PricingRuleResponse;
 import com.arsaka.pricing.service.PricingRuleService;
@@ -48,5 +50,16 @@ public class PricingRuleController {
     ) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<AdminPage<PricingRuleResponse>> listRules(
+            @RequestParam(required = false) UUID fareId,
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size
+    ) {
+        AdminPage<PricingRuleResponse> response = service.findRules(fareId, AdminPageRequest.of(page, size));
+
+        return ResponseEntity.ok(response);
     }
 }

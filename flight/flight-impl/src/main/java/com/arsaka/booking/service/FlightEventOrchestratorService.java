@@ -3,7 +3,7 @@ package com.arsaka.booking.service;
 import com.arsaka.booking.dto.TicketRecord;
 import com.arsaka.booking.mapper.TicketMapper;
 import com.arsaka.event.FlightsHoldEventRequest;
-import com.arsaka.flightsearch.service.FlightInventoryService;
+import com.arsaka.flight.service.FlightInventoryService;
 import com.arsaka.booking.dto.FlightHoldDto;
 import com.arsaka.booking.mapper.FlightReserveEventMapper;
 import com.arsaka.pricing.service.PricingService;

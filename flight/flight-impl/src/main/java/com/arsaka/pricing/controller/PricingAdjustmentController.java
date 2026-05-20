@@ -1,5 +1,7 @@
 package com.arsaka.pricing.controller;
 
+import com.arsaka.search.response.AdminPage;
+import com.arsaka.search.request.dto.AdminPageRequest;
 import com.arsaka.create.request.CreatePricingAdjustmentRequest;
 import com.arsaka.create.response.PricingAdjustmentResponse;
 import com.arsaka.pricing.service.PricingAdjustmentService;
@@ -48,5 +50,16 @@ public class PricingAdjustmentController {
     ) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<AdminPage<PricingAdjustmentResponse>> listAdjustments(
+            @RequestParam(required = false) UUID flightId,
+            @RequestParam(required = false) UUID fareId,
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size
+    ) {
+        AdminPage<PricingAdjustmentResponse> response = service.findAdjustments(flightId, fareId, AdminPageRequest.of(page, size));
+        return ResponseEntity.ok(response);
     }
 }

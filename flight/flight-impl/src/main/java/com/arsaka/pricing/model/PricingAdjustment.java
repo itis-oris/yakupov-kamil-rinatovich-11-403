@@ -1,6 +1,6 @@
 package com.arsaka.pricing.model;
 
-import com.arsaka.flightsearch.model.Flight;
+import com.arsaka.flight.model.Flight;
 import com.arsaka.common.PricingAdjustmentType;
 import jakarta.persistence.*;
 import lombok.*;

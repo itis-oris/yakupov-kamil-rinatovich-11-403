@@ -24,15 +24,6 @@ public class RouteAdminService {
     private final RouteMapper routeMapper;
 
     @Transactional
-    public List<RouteResponse> getByAirline(String airlineCode, boolean isActive) {
-        return routeAdminRepository
-                .findByAirlineCodeAndIsActive(airlineCode, isActive)
-                .stream()
-                .map(routeMapper::toResponse)
-                .toList();
-    }
-
-    @Transactional
     public List<RouteResponse> getActiveRoutesWithoutFlights() {
         return routeAdminRepository
                 .findActiveRoutesWithoutActiveFlights(List.of(

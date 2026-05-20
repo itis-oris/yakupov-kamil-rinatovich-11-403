@@ -1,6 +1,6 @@
 package com.arsaka.referencedata.mapper;
 
-import com.arsaka.flightsearch.model.Route;
+import com.arsaka.flight.model.Route;
 import com.arsaka.search.response.RouteResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

@@ -3,7 +3,7 @@ package com.arsaka.exception.handler;
 import com.arsaka.auth.exception.ApiException;
 import com.arsaka.auth.exception.AuthServiceException;
 import com.arsaka.exception.*;
-import com.arsaka.flightsearch.exception.CursorDecodeException;
+import com.arsaka.flight.exception.CursorDecodeException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;

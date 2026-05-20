@@ -3,7 +3,7 @@ package com.arsaka.booking.model;
 import com.arsaka.event.dto.DocumentType;
 import com.arsaka.event.dto.PassengerGender;
 import com.arsaka.common.PassengerType;
-import com.arsaka.flightsearch.model.Flight;
+import com.arsaka.flight.model.Flight;
 import com.arsaka.pricing.model.Fare;
 import com.arsaka.referencedata.model.Seat;
 import com.arsaka.search.request.dto.TicketStatus;

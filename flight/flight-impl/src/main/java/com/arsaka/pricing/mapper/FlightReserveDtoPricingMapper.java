@@ -2,7 +2,7 @@ package com.arsaka.pricing.mapper;
 
 import com.arsaka.booking.dto.FlightHoldDto;
 import com.arsaka.pricing.dto.PricingRecord;
-import com.arsaka.flightsearch.service.FlightInventoryService;
+import com.arsaka.flight.service.FlightInventoryService;
 import com.arsaka.pricing.util.PricingCalculator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

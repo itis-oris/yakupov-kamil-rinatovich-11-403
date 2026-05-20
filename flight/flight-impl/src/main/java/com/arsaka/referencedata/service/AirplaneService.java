@@ -1,5 +1,7 @@
 package com.arsaka.referencedata.service;
 
+import com.arsaka.search.response.AdminPage;
+import com.arsaka.search.request.dto.AdminPageRequest;
 import com.arsaka.create.request.CreateAirplaneRequest;
 import com.arsaka.create.response.AirplaneResponse;
 import com.arsaka.referencedata.mapper.AirplaneMapper;
@@ -11,9 +13,14 @@ import com.arsaka.referencedata.model.AirplaneType;
 import com.arsaka.referencedata.repository.AirplaneCommandRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -62,5 +69,35 @@ public class AirplaneService {
     public void delete(UUID id) {
         Airplane airplane = findById(id);
         airplane.setActive(false);
+    }
+
+    @Transactional
+    public AdminPage<AirplaneResponse> findAirplanes(
+            String airlineCode,
+            String airplaneTypeCode,
+            AdminPageRequest pageReq
+    ) {
+        Specification<Airplane> spec = Specification.where(null);
+
+        if (airlineCode != null && !airlineCode.isBlank()) {
+            spec = spec.and((root, q, cb) ->
+                    cb.equal(root.get("airline").get("code"), airlineCode.toUpperCase()));
+        }
+        if (airplaneTypeCode != null && !airplaneTypeCode.isBlank()) {
+            spec = spec.and((root, q, cb) ->
+                    cb.equal(root.get("airplaneType").get("code"), airplaneTypeCode.toUpperCase()));
+        }
+
+        Page<Airplane> page = repository.findAll(
+                spec,
+                PageRequest.of(pageReq.page(), pageReq.size(), Sort.by("number"))
+        );
+
+        List<AirplaneResponse> content = page.getContent()
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+
+        return AdminPage.of(content, pageReq, page.getTotalElements());
     }
 }

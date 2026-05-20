@@ -22,4 +22,13 @@ public enum CabinClass {
     public String toString() {
         return value;
     }
+
+    public static CabinClass fromValue(String value) {
+        for (CabinClass cabinClass : values()) {
+            if (cabinClass.value.equalsIgnoreCase(value)) {
+                return cabinClass;
+            }
+        }
+        throw new IllegalArgumentException("Unknown Cabin class: %s".formatted(value));
+    }
 }
