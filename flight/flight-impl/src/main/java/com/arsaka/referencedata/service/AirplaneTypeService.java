@@ -1,13 +1,16 @@
 package com.arsaka.referencedata.service;
 
+import com.arsaka.referencedata.exception.AirplaneNotFoundException;
 import com.arsaka.referencedata.exception.AirplaneTypeNotFoundException;
 import com.arsaka.referencedata.model.AirplaneType;
 import com.arsaka.referencedata.repository.AirplaneTypeCommandRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AirplaneTypeService {
 
     private final AirplaneTypeCommandRepository repository;
@@ -29,7 +32,10 @@ public class AirplaneTypeService {
 
     public AirplaneType findByCode(String code) {
         return repository.findById(code)
-                .orElseThrow(() -> new AirplaneTypeNotFoundException(code));
+                .orElseThrow(() -> {
+                    log.debug("Airplane type not found exception | airline type code={}", code);
+                    return new AirplaneTypeNotFoundException();
+                });
     }
 
 }

@@ -3,6 +3,7 @@ package com.arsaka.pricing.util;
 import com.arsaka.pricing.dto.PricingAdjRecord;
 import com.arsaka.pricing.dto.PricingRuleRecord;
 import com.arsaka.pricing.exception.PriceHashException;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 import java.util.HexFormat;
 import java.util.UUID;
 
+@Slf4j
 public class PricingHasher {
 
     //TODO: вынести в переменные окружения
@@ -54,7 +56,8 @@ public class PricingHasher {
             byte[] result = mac.doFinal(data.getBytes());
             return HexFormat.of().formatHex(result);
         } catch (Exception e) {
-            throw new PriceHashException(e.getMessage());
+            log.error("Failed to compute price hash | message={}", e.getMessage(), e);
+            throw new PriceHashException();
         }
     }
 }

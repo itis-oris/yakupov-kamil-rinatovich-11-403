@@ -7,6 +7,7 @@ import com.arsaka.auth.model.Role;
 import com.arsaka.auth.request.LoginRequest;
 import com.arsaka.auth.request.RegisterRequest;
 import com.arsaka.auth.request.ValidateRequest;
+import com.arsaka.auth.response.AccountResponse;
 import com.arsaka.auth.response.RegisterResponse;
 import com.arsaka.auth.response.ValidateResponse;
 import com.arsaka.auth.common.AccessDeniedReason;
@@ -16,6 +17,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -59,6 +62,12 @@ public class AuthOrchestrationService {
         jwtService.invalidateRefreshToken(requestRefreshToken);
     }
 
+    @Transactional
+    public AccountResponse findAccountById(UUID id) {
+        Account account = accountService.findAccountById(id);
+        return new AccountResponse(account.getUsername(), account.getEmail(), account.getCreatedAt(), account.getStatus());
+    }
+
     public ValidateResponse validate(ValidateRequest request) {
         try {
             AccountAuthData accountAuthData = jwtService.getAccountAuthData(request.token());
@@ -72,5 +81,11 @@ public class AuthOrchestrationService {
             log.error("jwt parsing exception | message={}", exception.getMessage(), exception);
             return ValidateResponse.ofNotAllowed(AccessDeniedReason.TOKEN_INVALID);
         }
+    }
+
+    @Transactional
+    public AccountResponse updateUsername(UUID accountId, String username) {
+        Account account = accountService.updateUsername(accountId, username);
+        return new AccountResponse(account.getUsername(), account.getEmail(), account.getCreatedAt(), account.getStatus());
     }
 }

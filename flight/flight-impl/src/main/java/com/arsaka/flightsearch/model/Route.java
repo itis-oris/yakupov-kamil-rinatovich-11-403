@@ -3,11 +3,9 @@ package com.arsaka.flightsearch.model;
 import com.arsaka.referencedata.model.Airline;
 import com.arsaka.referencedata.model.Airport;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Builder
@@ -15,12 +13,13 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "route")
-@Data
+@Getter
+@Setter
 public class Route {
 
+    @Builder.Default
     @Id
-    @GeneratedValue
-    private UUID id;
+    private UUID id = UUID.randomUUID();
 
     @Column(name = "number", nullable = false, unique = true)
     private String number;
@@ -40,4 +39,16 @@ public class Route {
     @Builder.Default
     @Column(name = "is_active", nullable = false)
     private boolean active = true;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Route route = (Route) o;
+        return Objects.equals(id, route.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

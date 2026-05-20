@@ -1,19 +1,18 @@
 package com.arsaka.referencedata.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "airport")
-@Data
+@Getter
+@Setter
 public class Airport {
 
     @Id
@@ -39,4 +38,16 @@ public class Airport {
     @Builder.Default
     @Column(name = "is_active", nullable = false)
     private boolean active = true;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Airport airport = (Airport) o;
+        return Objects.equals(code, airport.code);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(code);
+    }
 }

@@ -1,12 +1,14 @@
 package com.arsaka.flightsearch.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 public class FlightSearchRecord {
     private UUID flightId;
 

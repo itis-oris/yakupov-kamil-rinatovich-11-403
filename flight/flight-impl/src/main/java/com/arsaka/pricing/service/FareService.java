@@ -12,6 +12,7 @@ import com.arsaka.search.response.dto.FlightFare;
 import com.arsaka.pricing.exception.FareNotFoundException;
 import com.arsaka.pricing.repository.FareQueryRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FareService {
 
     private final FareQueryRepository queryRepository;
@@ -35,7 +37,8 @@ public class FareService {
         FlightFare fare = queryRepository.getFare(fareId);
 
         if(fare == null) {
-            throw new FareNotFoundException(fareId);
+            log.debug("Fare not found exception | fare id={}", fareId);
+            throw new FareNotFoundException();
         }
 
         return fare;
@@ -45,7 +48,8 @@ public class FareService {
         CabinClass cabinClass = queryRepository.getCabinClass(fareId);
 
         if(cabinClass == null) {
-            throw new FareNotFoundException(fareId);
+            log.debug("Fare not found exception | fare id={}", fareId);
+            throw new FareNotFoundException();
         }
 
         return cabinClass;
@@ -53,7 +57,10 @@ public class FareService {
 
     public Fare findById(UUID id) {
         return commandRepository.findById(id)
-                .orElseThrow(() -> new FareNotFoundException(id));
+                .orElseThrow(() -> {
+                    log.debug("Fare not found exception | fare id={}", id);
+                    return new FareNotFoundException();
+                });
     }
 
     @Transactional
@@ -70,9 +77,7 @@ public class FareService {
 
     @Transactional
     public void delete(UUID id) {
-        Fare fare = commandRepository.findById(id)
-                .orElseThrow(() -> new FareNotFoundException(id));
-
+        Fare fare = findById(id);
         fare.setActive(false);
     }
 }

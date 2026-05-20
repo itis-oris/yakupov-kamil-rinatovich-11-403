@@ -3,10 +3,12 @@ package com.arsaka.flightsearch.model;
 import com.arsaka.referencedata.model.Seat;
 import com.arsaka.search.response.dto.SeatReservedStatus;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -17,12 +19,12 @@ import java.util.UUID;
         columnNames = {"flight_id", "seat_id"}
     )
 )
-@Data
+@Getter
+@Setter
 public class SeatReserved {
 
     @Id
-    @GeneratedValue
-    private UUID id;
+    private UUID id = UUID.randomUUID();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "flight_id", nullable = false)
@@ -42,4 +44,16 @@ public class SeatReserved {
     @Column(name = "updated_at")
     @UpdateTimestamp
     private Instant updatedAt;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        SeatReserved that = (SeatReserved) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

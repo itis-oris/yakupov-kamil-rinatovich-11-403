@@ -1,11 +1,13 @@
 package com.arsaka.pricing.dto;
 
 import com.arsaka.common.PassengerType;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
-@Data
+@Getter
+@Setter
 public class PricingRuleRecord {
     private PassengerType passengerType;
     private BigDecimal multiplier;

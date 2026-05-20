@@ -2,13 +2,12 @@ package com.arsaka.flightsearch.dto;
 
 import com.arsaka.common.CabinClass;
 import com.arsaka.search.request.dto.OrderType;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.Instant;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class FlightSearchDto {

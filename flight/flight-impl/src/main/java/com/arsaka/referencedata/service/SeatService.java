@@ -8,6 +8,7 @@ import com.arsaka.referencedata.exception.SeatNotFoundException;
 import com.arsaka.referencedata.exception.SeatHoldException;
 import com.arsaka.referencedata.repository.SeatRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -15,6 +16,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SeatService {
 
     private final SeatRepository repository;
@@ -24,10 +26,15 @@ public class SeatService {
     }
 
     public FlightSeat getSeat(UUID flightId, UUID seatId) {
+        if(seatId == null) {
+            return null;
+        }
+
         FlightSeat seat = repository.getSeat(flightId, seatId);
 
         if (seat == null) {
-            throw new SeatNotFoundException(seatId);
+            log.debug("Seat not found exception | seatId={}", seatId);
+            throw new SeatNotFoundException();
         }
 
         return seat;
@@ -37,7 +44,8 @@ public class SeatService {
         for(FlightHoldDto flight: flights) {
             if(flight.getPassengerType() != PassengerType.INFANT) {
                 if(!repository.hold(flight.getFlightId(), flight.getSeatId(), bookingId)) {
-                    throw new SeatHoldException(flight.getFlightId(), flight.getSeatId());
+                    log.debug("Seat is not available exception | flightId={} | seatId={}",flight.getFlightId(), flight.getSeatId());
+                    throw new SeatHoldException();
                 }
             }
         }
@@ -47,7 +55,8 @@ public class SeatService {
         CabinClass cabinClass = repository.getCabinClass(seatId);
 
         if (cabinClass == null) {
-            throw new SeatNotFoundException(seatId);
+            log.debug("Seat not found exception | seatId={}", seatId);
+            throw new SeatNotFoundException();
         }
 
         return cabinClass;

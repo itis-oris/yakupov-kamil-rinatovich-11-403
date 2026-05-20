@@ -1,9 +1,9 @@
 package com.arsaka.exception;
 
-import lombok.Data;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-@Data
+@Getter
 public class ServiceException extends RuntimeException {
 
     private final HttpStatus status;

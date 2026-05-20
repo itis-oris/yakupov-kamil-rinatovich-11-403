@@ -1,4 +1,4 @@
-package com.arsaka.auth.controller;
+package com.arsaka.auth.service;
 
 import com.arsaka.auth.exception.ApiException;
 import com.arsaka.auth.exception.AuthServiceException;
@@ -7,6 +7,7 @@ import com.arsaka.auth.exception.ValidationException;
 import com.arsaka.auth.request.LoginRequest;
 import com.arsaka.auth.request.RegisterRequest;
 import com.arsaka.auth.request.ValidateRequest;
+import com.arsaka.auth.response.AccountResponse;
 import com.arsaka.auth.response.RegisterResponse;
 import com.arsaka.auth.response.ValidateResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,6 +18,9 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
+
+import java.util.Map;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -42,7 +46,11 @@ public class AuthServiceClient {
                         throw new AuthServiceException(res.getStatusCode().value(), apiException);
                     })
                     .toBodilessEntity();
+        } catch (AuthServiceException e) {
+            throw e;
+
         } catch (Exception exception) {
+            log.error("auth login request exception | message={}", exception.getMessage(), exception);
             throw new AuthServiceUnavailableException();
         }
     }
@@ -67,6 +75,7 @@ public class AuthServiceClient {
             throw e;
 
         } catch (Exception exception) {
+            log.error("auth refresh request exception | message={}", exception.getMessage(), exception);
             throw new AuthServiceUnavailableException();
         }
 
@@ -92,6 +101,7 @@ public class AuthServiceClient {
             throw e;
 
         } catch (Exception exception) {
+            log.error("auth register request exception | message={}", exception.getMessage(), exception);
             throw new AuthServiceUnavailableException();
         }
 
@@ -116,6 +126,7 @@ public class AuthServiceClient {
             throw e;
 
         } catch (Exception exception) {
+            log.error("auth logout request exception | message={}", exception.getMessage(), exception);
             throw new AuthServiceUnavailableException();
         }
 
@@ -142,6 +153,51 @@ public class AuthServiceClient {
         } catch (Exception e) {
             log.warn("Token validation failed: {}", e.getMessage());
             throw new ValidationException();
+        }
+    }
+
+    public AccountResponse findAccountById(UUID accountId) {
+        try {
+            return restClient
+                    .get()
+                    .uri("/api/v1/account/%s".formatted(accountId))
+                    .retrieve()
+                    .onStatus(HttpStatusCode::isError, (req, res) -> {
+                        ApiException apiException = mapper.readValue(
+                                res.getBody().readAllBytes(),
+                                ApiException.class
+                        );
+                        throw new AuthServiceException(res.getStatusCode().value(), apiException);
+                    })
+                    .body(AccountResponse.class);
+        } catch (AuthServiceException e) {
+            throw e;
+        } catch (Exception exception) {
+            log.error("auth get request exception | message={}", exception.getMessage(), exception);
+            throw new AuthServiceUnavailableException();
+        }
+    }
+
+    public AccountResponse updateUsername(UUID accountId, String username) {
+        try {
+            return restClient
+                    .patch()
+                    .uri("/api/v1/account/%s".formatted(accountId))
+                    .body(Map.of("username", username))
+                    .retrieve()
+                    .onStatus(HttpStatusCode::isError, (req, res) -> {
+                        ApiException apiException = mapper.readValue(
+                                res.getBody().readAllBytes(),
+                                ApiException.class
+                        );
+                        throw new AuthServiceException(res.getStatusCode().value(), apiException);
+                    })
+                    .body(AccountResponse.class);
+        } catch (AuthServiceException e) {
+            throw e;
+        } catch (Exception exception) {
+            log.error("auth update username request exception | message={}", exception.getMessage(), exception);
+            throw new AuthServiceUnavailableException();
         }
     }
 }

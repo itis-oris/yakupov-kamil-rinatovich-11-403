@@ -1,11 +1,15 @@
 package com.arsaka.referencedata.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.Objects;
 
 @Entity
 @Table(name = "city")
-@Data
+@Getter
+@Setter
 public class City {
 
     @Id
@@ -18,4 +22,16 @@ public class City {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_code", nullable = false)
     private Country country;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        City city = (City) o;
+        return Objects.equals(code, city.code);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(code);
+    }
 }

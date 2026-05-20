@@ -20,6 +20,7 @@ import com.arsaka.pricing.repository.PricingRepository;
 import com.arsaka.pricing.util.PricingCalculator;
 import com.arsaka.pricing.util.PricingHasher;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -27,6 +28,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PricingService {
 
     private final PricingRepository repository;
@@ -49,7 +51,8 @@ public class PricingService {
             Set<PricingRuleRecord> pricingRuleRecords = record.getRuleRecord();
 
             if(pricingRuleRecords.isEmpty()) {
-                throw new PricingRuleNotFoundException(fare.fareId(), request.passengers().keySet());
+                log.debug("Pricing rule not found exception | fare id={} | passengers={}", fare.fareId(), request.passengers().keySet());
+                throw new PricingRuleNotFoundException();
             }
 
             PricingAdjRecord pricingAdjRecord = record.getAdjRecord();
@@ -101,7 +104,8 @@ public class PricingService {
         );
 
         if (record == null) {
-            throw new PriceNotFoundException(flightId, fareId, passengerType);
+            log.debug("Price not found exception | flightId={} | fareId={} | passengerType={}", flightId, fareId, passengerType);
+            throw new PriceNotFoundException();
         }
 
 
@@ -150,19 +154,14 @@ public class PricingService {
                     record.getRuleRecord()
             );
 
-            System.out.println("flight " + flight);
-            System.out.println("record " + record);
-
-            System.out.println("hash " + hash);
-            System.out.println("price " + price);
-
             if (!flight.getPriceHash().equals(hash) || price.compareTo(flight.getTotalPrice()) != 0) {
-                throw new PriceNotValidException(
+                log.debug("Price not valid exception | flightId={} | seatId={} | fareId={} | passengerType = {}",
                         flight.getFlightId(),
                         flight.getFareId(),
                         flight.getSeatId(),
                         flight.getPassengerType()
                 );
+                throw new PriceNotValidException();
             }
         }
     }

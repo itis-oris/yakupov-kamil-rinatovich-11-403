@@ -1,6 +1,5 @@
 package com.arsaka.booking.mapper;
 
-
 import com.arsaka.common.CabinClass;
 import com.arsaka.common.PassengerType;
 import com.arsaka.event.FlightsHoldEventRequest;
@@ -11,6 +10,7 @@ import com.arsaka.pricing.service.FareService;
 import com.arsaka.referencedata.exception.SeatCabinClassException;
 import com.arsaka.referencedata.service.SeatService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -19,6 +19,7 @@ import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class FlightReserveEventMapper {
 
     private final FlightReserveMapper flightReserveMapper;
@@ -35,12 +36,17 @@ public class FlightReserveEventMapper {
                 seatCabinClass = seatService.getCabinClass(flight.seatId());
 
                 if (!fareCabinClass.equals(seatCabinClass)) {
-                    throw new SeatCabinClassException(flight.seatId(), flight.fareId(), seatCabinClass, fareCabinClass);
+                    log.debug("Seat cabin class doesn't match with fare cabin class exception| seatId={} | fareId={} | seatCabinClass={} | fareCabinClass={}",
+                            flight.seatId(),
+                            flight.fareId(),
+                            seatCabinClass,
+                            fareCabinClass
+                    );
+                    throw new SeatCabinClassException();
                 }
             }
 
             BigDecimal basePrice = flightInventoryService.getPrice(flight.flightId(), fareCabinClass);
-            System.out.println("базовая цена для " + flight.passengerType() + " " + basePrice);
 
             result.add(flightReserveMapper.map(flight, seatCabinClass, fareCabinClass, basePrice));
         }

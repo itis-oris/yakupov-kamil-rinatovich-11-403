@@ -25,10 +25,16 @@ public class SecurityConfig {
 
     private final static String[] PERMIT_ALL = {
             "/",
-            "/api/v1/flights/search",
-            "/api/v1/flights/{flightId}/fares",
-            "/api/v1/flights/{flightId}",
-            "/api/v1/auth/**"
+            "/login",
+            "/register",
+            "/flights/**",
+            "/css/**",
+            "/js/**",
+            "/images/**",
+            "/favicon.ico",
+            "/.well-known/**",
+            "/api/v1/auth/**",
+            "/api/v1/flights/**"
     };
 
     @Bean
@@ -38,15 +44,9 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/css/**",
-                                "/js/**",
-                                "/images/**",
-                                "/webjars/**"
-                        ).permitAll()
                         .requestMatchers(PERMIT_ALL).permitAll()
                         .requestMatchers("/api/v1/admin/**").hasRole(AccountRole.ADMIN.name())
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
                 ).exceptionHandling(ex -> ex
                         .authenticationEntryPoint(authenticationEntryPoint)
                         .accessDeniedHandler(accessDeniedHandler)

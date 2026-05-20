@@ -22,4 +22,13 @@ public enum PassengerType {
     public String toString() {
         return value;
     }
+
+    public static PassengerType fromValue(String value) {
+        for (PassengerType type : values()) {
+            if (type.value.equalsIgnoreCase(value)) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("Unknown PassengerType: %s".formatted(value));
+    }
 }

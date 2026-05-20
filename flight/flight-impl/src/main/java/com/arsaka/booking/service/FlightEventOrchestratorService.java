@@ -33,32 +33,58 @@ public class FlightEventOrchestratorService {
 
     @Transactional
     public void hold(FlightsHoldEventRequest event, UUID accountId) {
+        log.debug("starting flights hold | event={} | accountId={}", event, accountId);
         UUID bookingId = UUID.randomUUID();
 
+        log.debug("starting flights mapping | event={} | accountId={} | bookingId={}", event, accountId, bookingId);
         Set<FlightHoldDto> flights = flightReserveEventMapper.map(event);
+        log.debug("flights mapped | event={} | accountId={} | flights={} | bookingId={}", event, accountId, flights, bookingId);
 
-        seatService.holdSeats(bookingId, flights);
-
-        flightInventoryService.holdSeats(flights);
-
+        log.debug("starting flights price validation | event={} | accountId={} | bookingId={}", event, accountId, bookingId);
         pricingService.validatePrice(flights);
+        log.debug("flights price validated | event={} | accountId={} | bookingId={}", event, accountId, bookingId);
 
+        log.debug("starting flights booking saving | event={} | accountId={} | bookingId={}", event, accountId, bookingId);
         bookingService.save(bookingId, accountId, flights);
+        log.debug("flights booking saved | event={} | accountId={} | bookingId={}", event, accountId, bookingId);
 
+        log.debug("starting flights seat hold | event={} | accountId={} | bookingId={}", event, accountId, bookingId);
+        seatService.holdSeats(bookingId, flights);
+        log.debug("flights seat held | event={} | accountId={} | bookingId={}", event, accountId, bookingId);
+
+        log.debug("starting flights inventory hold | event={} | accountId={} | bookingId={}", event, accountId, bookingId);
+        flightInventoryService.holdSeats(flights);
+        log.debug("flights inventory held | event={} | accountId={} | bookingId={}", event, accountId, bookingId);
+
+        log.debug("starting flights tickets saving | event={} | accountId={} | bookingId={}", event, accountId, bookingId);
         ticketService.save(bookingId, flights);
+        log.debug("flights tickets saved | event={} | accountId={} | bookingId={}", event, accountId, bookingId);
+
+        log.debug("flights held | event={} | accountId={}", event, accountId);
     }
 
     @Transactional
     public void cancel(UUID bookingId) {
+        log.debug("starting flights hold cancel | bookingId={}", bookingId);
+
         List<TicketRecord> tickets = ticketService.releaseHoldAndGetTickets(bookingId);
+        log.debug("get flights tickets to cancel | tickets={} | bookingId={}", tickets, bookingId);
 
+        log.debug("starting flights tickets mapping | bookingId={}", bookingId);
         ticketMapper.map(tickets);
+        log.debug("flights tickets mapped | bookingId={}", bookingId);
 
+        log.debug("starting flights seats hold releasing | bookingId={}", bookingId);
         seatService.releaseHold(bookingId);
+        log.debug("flights seats hold released | bookingId={}", bookingId);
 
+        log.debug("starting flights inventory hold releasing | bookingId={}", bookingId);
         flightInventoryService.releaseHold(tickets);
+        log.debug("flights inventory hold released | bookingId={}", bookingId);
 
+        log.debug("starting flights booking hold releasing | bookingId={}", bookingId);
         bookingService.releaseHold(bookingId);
+        log.debug("flights inventory booking released | bookingId={}", bookingId);
     }
 
 //    @Transactional

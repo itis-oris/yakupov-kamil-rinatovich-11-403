@@ -39,7 +39,8 @@ public class FlightCursorUtil {
                 );
             };
         } catch (Exception e) {
-            throw new CursorDecodeException(cursorData);
+            log.error("failed to decode cursor exception | message={} | cursor={}", e.getMessage(), cursorData);
+            throw new CursorDecodeException();
         }
 
     }

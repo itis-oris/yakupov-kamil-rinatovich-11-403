@@ -3,11 +3,9 @@ package com.arsaka.pricing.model;
 import com.arsaka.common.CabinClass;
 import com.arsaka.referencedata.model.Airline;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Builder
@@ -15,12 +13,13 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "fare")
-@Data
+@Getter
+@Setter
 public class Fare {
 
+    @Builder.Default
     @Id
-    @GeneratedValue
-    private UUID id;
+    private UUID id = UUID.randomUUID();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "airline_code", nullable = false)
@@ -44,4 +43,16 @@ public class Fare {
     @Builder.Default
     @Column(name = "is_active", nullable = false)
     private boolean active = true;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Fare fare = (Fare) o;
+        return Objects.equals(id, fare.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

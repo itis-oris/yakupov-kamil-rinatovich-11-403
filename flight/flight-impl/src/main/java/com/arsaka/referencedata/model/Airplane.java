@@ -1,11 +1,9 @@
 package com.arsaka.referencedata.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Builder
@@ -13,12 +11,13 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "airplane")
-@Data
+@Getter
+@Setter
 public class Airplane {
 
+    @Builder.Default
     @Id
-    @GeneratedValue
-    private UUID id;
+    private UUID id = UUID.randomUUID();
 
     @Column(name = "number", nullable = false, unique = true)
     private String number;
@@ -37,4 +36,16 @@ public class Airplane {
     @Builder.Default
     @Column(name = "is_active", nullable = false)
     private boolean active = true;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Airplane airplane = (Airplane) o;
+        return Objects.equals(id, airplane.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

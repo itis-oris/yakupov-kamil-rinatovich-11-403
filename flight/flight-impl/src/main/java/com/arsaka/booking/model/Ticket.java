@@ -8,23 +8,25 @@ import com.arsaka.pricing.model.Fare;
 import com.arsaka.referencedata.model.Seat;
 import com.arsaka.search.request.dto.TicketStatus;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
 @Table(name = "ticket")
-@Data
+@Getter
+@Setter
 public class Ticket {
 
     @Id
-    @GeneratedValue
-    private UUID id;
+    private UUID id = UUID.randomUUID();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
@@ -82,4 +84,16 @@ public class Ticket {
     @Column(name = "updated_at")
     @UpdateTimestamp
     private Instant updatedAt;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Ticket ticket = (Ticket) o;
+        return Objects.equals(id, ticket.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

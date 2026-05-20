@@ -2,7 +2,6 @@ package com.arsaka.exception.handler;
 
 import com.arsaka.auth.exception.ApiException;
 import com.arsaka.auth.exception.AuthServiceException;
-import com.arsaka.auth.exception.JwtValidException;
 import com.arsaka.exception.*;
 import com.arsaka.flightsearch.exception.CursorDecodeException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
@@ -12,13 +11,13 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.List;
 import java.util.Map;
@@ -155,6 +154,11 @@ public class GlobalExceptionHandler {
                                 request.getRequestURI()
                         )
                 );
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<Void> handleNoResource() {
+        return ResponseEntity.notFound().build();
     }
 
     @ExceptionHandler(BadRequestException.class)

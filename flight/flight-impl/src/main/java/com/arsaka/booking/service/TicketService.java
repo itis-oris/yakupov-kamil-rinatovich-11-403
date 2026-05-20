@@ -18,6 +18,7 @@ import com.arsaka.search.response.ReservationSearchResponse;
 import com.arsaka.search.response.ReservationsSearchResponse;
 import com.arsaka.search.response.dto.TicketSearch;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TicketService {
 
     private final TicketRepository repository;
@@ -82,11 +84,13 @@ public class TicketService {
         TicketWithDetailsSearchRecord record = repository.findTicket(accountId, ticketId);
 
         if(record == null) {
-            throw new TicketNotFoundException(ticketId);
+            log.debug("ticked not found exception | ticketId={}", ticketId);
+            throw new TicketNotFoundException();
         }
 
         if(!record.getAccountId().equals(accountId)) {
-            throw new TicketAccessDeniedException(accountId, ticketId);
+            log.debug("Access denied to ticket exception | account id={} | ticket id={}", accountId, ticketId);
+            throw new TicketAccessDeniedException();
         }
 
         return mapper.map(record);

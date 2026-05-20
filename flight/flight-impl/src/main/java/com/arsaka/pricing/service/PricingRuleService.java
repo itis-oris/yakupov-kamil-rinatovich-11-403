@@ -10,6 +10,7 @@ import com.arsaka.pricing.model.PricingRule;
 import com.arsaka.pricing.repository.PricingRuleRepository;
 import com.arsaka.updaterequest.UpdatePricingRuleRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PricingRuleService {
 
     private final PricingRuleRepository repository;
@@ -31,7 +33,8 @@ public class PricingRuleService {
 
         if (pricingRule != null) {
             if (pricingRule.isActive()) {
-                throw new PricingRuleAlreadyExistsException(fare.getId(), request.passengerType());
+                log.debug("Pricing rule already exists | fare id={} | passenger type={}", fare.getId(), request.passengerType());
+                throw new PricingRuleAlreadyExistsException();
             }
             pricingRule.setActive(true);
             return mapper.toResponse(pricingRule);
@@ -46,11 +49,11 @@ public class PricingRuleService {
 
     @Transactional
     public PricingRuleResponse update(UUID id, UpdatePricingRuleRequest request) {
-        PricingRule pricingRule = repository.findById(id)
-                .orElseThrow(() -> new PricingRuleNotFoundException(id));
+        PricingRule pricingRule = findById(id);
 
         if(!pricingRule.isActive()) {
-            throw new PricingRuleNotFoundException(id);
+            log.debug("Pricing rule not active | id={}", id);
+            throw new PricingRuleNotFoundException();
         }
 
         pricingRule.setMultiplier(request.multiplier());
@@ -58,12 +61,18 @@ public class PricingRuleService {
         return mapper.toResponse(pricingRule);
     }
 
+    private PricingRule findById(UUID id) {
+        return repository.findById(id)
+                .orElseThrow(() -> {
+                    log.debug("Pricing rule not found exception | id={}", id);
+                    return new PricingRuleNotFoundException();
+                });
+    }
+
 
     @Transactional
     public void delete(UUID id) {
-        PricingRule pricingRule = repository.findById(id)
-                .orElseThrow(() -> new PricingRuleNotFoundException(id));
-
+        PricingRule pricingRule = findById(id);
         pricingRule.setActive(false);
     }
 }

@@ -1,25 +1,26 @@
 package com.arsaka.auth.model;
 
-import com.arsaka.auth.model.AccountStatus;
-import com.arsaka.auth.model.Role;
+import com.arsaka.auth.common.AccountStatus;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
 @Table(name = "account")
-@Data
+@Getter
+@Setter
 public class Account {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
-    private UUID id;
+    private UUID id = UUID.randomUUID();
 
     @Column(name = "username", nullable = false, unique = true)
     private String username;
@@ -45,4 +46,16 @@ public class Account {
     @Column(name = "created_at", nullable = false)
     @CreationTimestamp
     private Instant createdAt;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Account account = (Account) o;
+        return Objects.equals(id, account.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

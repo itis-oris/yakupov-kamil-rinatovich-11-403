@@ -1,11 +1,15 @@
 package com.arsaka.referencedata.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.Objects;
 
 @Entity
 @Table(name = "airplane_type")
-@Data
+@Getter
+@Setter
 public class AirplaneType {
 
     @Id
@@ -20,4 +24,16 @@ public class AirplaneType {
 
     @Column(name = "total_seats", nullable = false)
     private int totalSeats;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        AirplaneType that = (AirplaneType) o;
+        return Objects.equals(code, that.code);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(code);
+    }
 }

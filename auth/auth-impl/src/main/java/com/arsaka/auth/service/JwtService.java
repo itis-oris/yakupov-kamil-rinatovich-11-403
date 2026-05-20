@@ -32,7 +32,7 @@ public class JwtService {
     public TokenCouple generateTokenCouple(Account account) {
         String accessToken = jwtAccessService.generate(account);
         String refreshToken = jwtRefreshService.generate(account);
-        return new TokenCouple(accessToken, refreshToken, properties.refreshTokenExpiration(), properties.accessTokenExpiration());
+        return new TokenCouple(accessToken, refreshToken, properties.accessTokenExpiration(), properties.refreshTokenExpiration());
     }
 
     public TokenCouple generateTokenCouple(String requestRefreshToken) {
@@ -48,7 +48,7 @@ public class JwtService {
 
             log.info("Refresh token updated | accountId={}", account.getId());
 
-            return new TokenCouple(accessToken, refreshToken, properties.refreshTokenExpiration(), properties.accessTokenExpiration());
+            return new TokenCouple(accessToken, refreshToken, properties.accessTokenExpiration(), properties.refreshTokenExpiration());
         } catch (AccountNotFoundException exception) {
             log.warn("Account not found exception | accountId={}", refreshTokenData.getAccountId());
             throw new InvalidSessionException();

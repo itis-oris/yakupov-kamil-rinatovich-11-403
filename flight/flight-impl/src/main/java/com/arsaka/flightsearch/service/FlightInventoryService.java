@@ -16,6 +16,7 @@ import com.arsaka.flightsearch.repository.FlightInventoryQueryRepository;
 import com.arsaka.booking.dto.FlightHoldDto;
 import com.arsaka.updaterequest.UpdateFlightInventoryRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FlightInventoryService {
 
     private final FlightInventoryQueryRepository queryRepository;
@@ -37,7 +39,8 @@ public class FlightInventoryService {
         BigDecimal price = queryRepository.getPrice(flightId, cabinClass);
 
         if (price == null) {
-            throw new FlightInventoryNotFoundException(flightId, cabinClass);
+            log.debug("flight inventory not found exception | flight id={} | cabin class={}", flightId, cabinClass);
+            throw new FlightInventoryNotFoundException();
         }
 
         return price;
@@ -47,7 +50,8 @@ public class FlightInventoryService {
         for(FlightHoldDto flight: flights) {
             if(flight.getPassengerType() != PassengerType.INFANT) {
                 if(!queryRepository.setHeld(flight.getFlightId(), flight.getFareCabinClass())) {
-                    throw new FlightInventoryHoldException(flight.getFlightId(), flight.getFareCabinClass());
+                    log.debug("Flight Inventory is not available exception | flightId={} | cabinClass={}", flight.getFlightId(), flight.getFareCabinClass());
+                    throw new FlightInventoryHoldException();
                 }
             }
         }
@@ -67,7 +71,8 @@ public class FlightInventoryService {
         Flight flight = flightService.findById(request.flightId());
 
         if(commandRepository.existsByFlightAndCabinClass(flight, request.cabinClass())) {
-            throw new FlightInventoryAlreadyExistsException(request.flightId(), request.cabinClass());
+            log.debug("Flight inventory already exists exception | flight id={} | cabin class={}", request.flightId(), request.cabinClass());
+            throw new FlightInventoryAlreadyExistsException();
         }
 
         FlightInventory flightInventory = mapper.toEntity(request, flight);
@@ -82,7 +87,10 @@ public class FlightInventoryService {
     @Transactional
     public FlightInventoryResponse update(UUID id, UpdateFlightInventoryRequest request) {
         FlightInventory flightInventory = commandRepository.findById(id)
-                .orElseThrow(() -> new FlightInventoryNotFoundException(id));
+                .orElseThrow(() -> {
+                    log.debug("flight inventory not found exception | flight inventory id={}", id);
+                    return new FlightInventoryNotFoundException();
+                });
 
         flightInventory.setPrice(request.price());
 

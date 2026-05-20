@@ -10,6 +10,7 @@ import com.arsaka.pricing.dto.PricingRuleRecord;
 import com.arsaka.pricing.exception.PricingRuleNotFoundException;
 import com.arsaka.pricing.util.PricingConditionBuilder;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
@@ -20,6 +21,7 @@ import static com.arsaka.jooq.Tables.*;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class PricingRepository {
 
     private final DSLContext dsl;
@@ -109,7 +111,8 @@ public class PricingRepository {
                         .fetchOneInto(PricingRuleRecord.class);
 
         if (pricingRuleRecord == null) {
-            throw new PricingRuleNotFoundException(fareId, passengerType);
+            log.debug("Pricing rule not found exception | fareId={} | passengerType={}", fareId, passengerType);
+            throw new PricingRuleNotFoundException();
         }
 
         return new PricingRecord(pricingAdjRecord, pricingRuleRecord);

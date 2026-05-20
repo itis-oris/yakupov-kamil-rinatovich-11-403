@@ -41,13 +41,13 @@ public class FlightSearchController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{flightId}")
-    public ResponseEntity<FlightSearchResponse> getFlight(
-            @PathVariable UUID flightId,
-            @Valid @ModelAttribute FlightRequest request
-    ) {
-        FlightSearchResponse response = service.getFlight(flightId, request);
-        return ResponseEntity.ok(response);
-    }
+//    @GetMapping("/{flightId}")
+//    public ResponseEntity<FlightSearchResponse> getFlight(
+//            @PathVariable UUID flightId,
+//            @Valid @ModelAttribute FlightRequest request
+//    ) {
+//        FlightSearchResponse response = service.getFlight(flightId, request);
+//        return ResponseEntity.ok(response);
+//    }
 
 }

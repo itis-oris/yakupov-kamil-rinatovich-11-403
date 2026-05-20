@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum TicketStatus {
     ISSUED("issued"),
     CANCELLED("cancelled"),
-    REFUNDED("refunded"),
     CONFIRMED("confirmed");
 
     private final String value;

@@ -1,7 +1,6 @@
 package com.arsaka.auth.service;
 
 import com.arsaka.auth.common.AccountRole;
-import com.arsaka.auth.model.Role;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import com.arsaka.auth.config.JwtProperties;

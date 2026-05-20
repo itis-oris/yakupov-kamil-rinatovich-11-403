@@ -1,7 +1,6 @@
 package com.arsaka.referencedata.service;
 
 import com.arsaka.referencedata.dto.CityDto;
-import com.arsaka.referencedata.model.City;
 import com.arsaka.referencedata.repository.CityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;

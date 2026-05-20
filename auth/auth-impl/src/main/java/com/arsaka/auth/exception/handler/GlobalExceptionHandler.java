@@ -1,4 +1,4 @@
-package com.arsaka.auth.controller.handler;
+package com.arsaka.auth.exception.handler;
 
 import com.arsaka.auth.exception.*;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
@@ -99,7 +99,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({
             InvalidSessionException.class,
-            BadCredentialsException.class,
             JwtValidException.class,
             MissingRequestCookieException.class
     })
@@ -109,6 +108,18 @@ public class GlobalExceptionHandler {
                 .body(ApiException.of(
                                 SC_UNAUTHORIZED,
                                 exception.getMessage(),
+                                request.getRequestURI()
+                        )
+                );
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public final ResponseEntity<ApiException> handleLoginException(Exception exception, HttpServletRequest request) {
+        return ResponseEntity
+                .status(SC_UNAUTHORIZED)
+                .body(ApiException.of(
+                                SC_UNAUTHORIZED,
+                                "wrong login or password, try again",
                                 request.getRequestURI()
                         )
                 );

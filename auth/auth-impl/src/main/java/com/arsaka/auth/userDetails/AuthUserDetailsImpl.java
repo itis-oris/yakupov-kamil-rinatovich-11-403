@@ -1,13 +1,12 @@
 package com.arsaka.auth.userDetails;
 
 import com.arsaka.auth.model.Account;
-import com.arsaka.auth.model.AccountStatus;
+import com.arsaka.auth.common.AccountStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
 
 public record AuthUserDetailsImpl(Account account) implements UserDetails {
 

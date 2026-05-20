@@ -9,11 +9,13 @@ import com.arsaka.referencedata.model.Airline;
 import com.arsaka.referencedata.model.Country;
 import com.arsaka.referencedata.repository.AirlineCommandRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AirlineService {
 
     private final AirlineCommandRepository repository;
@@ -26,7 +28,8 @@ public class AirlineService {
 
         if (airline != null) {
             if (airline.isActive()) {
-                throw new AirlineAlreadyExistsException(request.code());
+                log.debug("Airline with this code already exists exception | airline code={}", request.code());
+                throw new AirlineAlreadyExistsException();
             }
             airline.setActive(true);
             return airlineMapper.toResponse(airline);
@@ -43,14 +46,15 @@ public class AirlineService {
 
     public Airline findByCode(String code) {
         return repository.findById(code)
-                .orElseThrow(() -> new AirlineNotFoundException(code));
+                .orElseThrow(() -> {
+                    log.debug("Airline not found exception | airline code={}", code);
+                    return new AirlineNotFoundException();
+                });
     }
 
     @Transactional
     public void delete(String code) {
-        Airline airline = repository.findById(code)
-                .orElseThrow(() -> new AirlineNotFoundException(code));
-
+        Airline airline = findByCode(code);
         airline.setActive(false);
     }
 }

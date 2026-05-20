@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
+
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
@@ -31,7 +33,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<Void> login(@Valid @RequestBody LoginRequest loginRequest) {
-        log.info("Login request | email={}", loginRequest.email());
+        log.info("Login request | email={}", loginRequest);
         TokenCouple tokenCouple = service.login(loginRequest);
         return setTokenCookie(tokenCouple);
     }
@@ -69,8 +71,8 @@ public class AuthController {
         ResponseCookie refreshCookie = ResponseCookie.from(REFRESH_TOKEN_COOKIE_NAME, tokenCouple.refreshToken())
                 .httpOnly(true)
                 //.secure(true)
-                .path("/api/v1/auth")
-                .maxAge(tokenCouple.refreshTokenExpiration())
+                .path("/")
+                .maxAge(Duration.ofMillis(tokenCouple.refreshTokenExpiration()))
                 .sameSite("Strict")
                 .build();
 
@@ -78,7 +80,7 @@ public class AuthController {
                 .httpOnly(true)
                 //.secure(true)
                 .path("/")
-                .maxAge(tokenCouple.accessTokenExpiration())
+                .maxAge(Duration.ofMillis(tokenCouple.accessTokenExpiration()))
                 .sameSite("Strict")
                 .build();
 

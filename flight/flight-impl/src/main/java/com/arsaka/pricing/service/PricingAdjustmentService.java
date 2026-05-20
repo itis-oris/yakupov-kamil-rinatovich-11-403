@@ -12,6 +12,7 @@ import com.arsaka.pricing.model.PricingAdjustment;
 import com.arsaka.pricing.repository.PricingAdjustmentRepository;
 import com.arsaka.updaterequest.UpdatePricingAdjustmentRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PricingAdjustmentService {
 
     private final PricingAdjustmentRepository repository;
@@ -36,7 +38,8 @@ public class PricingAdjustmentService {
 
         if (pricingAdjustment != null) {
             if (pricingAdjustment.isActive()) {
-                throw new PricingAdjustmentAlreadyExistsException(flight.getId(), fare.getId());
+                log.debug("Pricing adjustment already exists exception | flight id={} | fare id={}", flight.getId(), fare.getId());
+                throw new PricingAdjustmentAlreadyExistsException();
             }
             pricingAdjustment.setActive(true);
             return mapper.toResponse(pricingAdjustment);
@@ -49,13 +52,15 @@ public class PricingAdjustmentService {
         return mapper.toResponse(saved);
     }
 
+
+
     @Transactional
     public PricingAdjustmentResponse update(UUID id, UpdatePricingAdjustmentRequest request) {
-        PricingAdjustment pricingAdjustment = repository.findById(id)
-                .orElseThrow(() -> new PricingAdjustmentNotFoundException(id));
+        PricingAdjustment pricingAdjustment = findById(id);
 
         if(!pricingAdjustment.isActive()) {
-            throw new PricingAdjustmentNotFoundException(id);
+            log.debug("Pricing adjustment not active | id={}", id);
+            throw new PricingAdjustmentNotFoundException();
         }
 
         pricingAdjustment.setType(request.type());
@@ -64,12 +69,18 @@ public class PricingAdjustmentService {
         return mapper.toResponse(pricingAdjustment);
     }
 
+    public PricingAdjustment findById(UUID id) {
+        return repository.findById(id)
+                .orElseThrow(() -> {
+                    log.debug("Pricing adjustment not found exception | id={}", id);
+                    return new PricingAdjustmentNotFoundException();
+                });
+    }
+
 
     @Transactional
     public void delete(UUID id) {
-        PricingAdjustment pricingAdjustment = repository.findById(id)
-                .orElseThrow(() -> new PricingAdjustmentNotFoundException(id));
-
+        PricingAdjustment pricingAdjustment = findById(id);
         pricingAdjustment.setActive(false);
     }
 }

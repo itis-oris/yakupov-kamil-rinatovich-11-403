@@ -1,4 +1,4 @@
-package com.arsaka.auth.model;
+package com.arsaka.auth.common;
 
 public enum AccountStatus {
     PENDING,

@@ -2,6 +2,7 @@ package com.arsaka.booking.util;
 
 import com.arsaka.booking.dto.TicketSearchRecord;
 import com.arsaka.flightsearch.exception.CursorDecodeException;
+import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
@@ -9,6 +10,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 public class TicketCursorUtil {
 
     public static final int cursorLimit = 5;
@@ -27,8 +29,8 @@ public class TicketCursorUtil {
                     UUID.fromString(cursorParts[1])
                 );
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw new CursorDecodeException(cursorData);
+            log.error("failed to decode cursor exception | message={} | cursor={}", e.getMessage(), cursorData);
+            throw new CursorDecodeException();
         }
 
     }

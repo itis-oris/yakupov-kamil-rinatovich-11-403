@@ -2,12 +2,10 @@ package com.arsaka.pricing.model;
 
 import com.arsaka.common.PassengerType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.UUID;
 
 @Builder
@@ -21,12 +19,13 @@ import java.util.UUID;
         columnNames = {"fare_id", "passenger_type"}
     )
 )
-@Data
+@Getter
+@Setter
 public class PricingRule {
 
+    @Builder.Default
     @Id
-    @GeneratedValue
-    private UUID id;
+    private UUID id = UUID.randomUUID();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fare_id", nullable = false)
@@ -42,4 +41,16 @@ public class PricingRule {
     @Builder.Default
     @Column(name = "is_active", nullable = false)
     private boolean active = true;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        PricingRule that = (PricingRule) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

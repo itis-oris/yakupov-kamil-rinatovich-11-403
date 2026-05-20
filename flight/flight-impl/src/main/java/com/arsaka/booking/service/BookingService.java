@@ -8,6 +8,7 @@ import com.arsaka.booking.repository.BookingRepository;
 import com.arsaka.booking.dto.FlightHoldDto;
 import com.arsaka.jooq.tables.records.BookingRecord;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,6 +17,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BookingService {
 
     private final BookingRepository repository;
@@ -27,7 +29,8 @@ public class BookingService {
         }
 
         if(!repository.save(bookingId, totalPrice, accountId)) {
-            throw new BookingDuplicateException(bookingId);
+            log.debug("booking already exists exception | bookingId={}", bookingId);
+            throw new BookingDuplicateException();
         }
     }
 
@@ -35,11 +38,13 @@ public class BookingService {
         BookingRecord bookingRecord = repository.findById(bookingId);
 
         if(bookingRecord == null) {
-            throw new BookingNotFoundException(bookingId);
+            log.debug("booking not found exception | bookingId={}", bookingId);
+            throw new BookingNotFoundException();
         }
 
         if(bookingRecord.getStatus().equals(BookingStatus.CONFIRMED.name())) {
-            throw new BookingReleaseHoldException(bookingId);
+            log.debug("booking already confirmed exception | bookingId={}", bookingId);
+            throw new BookingReleaseHoldException();
         }
 
         repository.setStatus(bookingId, BookingStatus.CANCELLED);

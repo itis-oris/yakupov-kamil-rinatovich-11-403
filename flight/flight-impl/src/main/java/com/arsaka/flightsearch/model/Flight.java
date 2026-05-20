@@ -4,13 +4,11 @@ import com.arsaka.common.FlightStatus;
 import com.arsaka.referencedata.model.Airplane;
 import com.arsaka.referencedata.model.AirplaneType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
 
 @Builder
@@ -18,12 +16,13 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "flight")
-@Data
+@Getter
+@Setter
 public class Flight {
 
+    @Builder.Default
     @Id
-    @GeneratedValue
-    private UUID id;
+    private UUID id = UUID.randomUUID();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "route_id", nullable = false)
@@ -57,4 +56,16 @@ public class Flight {
     @Column(name = "updated_at", nullable = false)
     @UpdateTimestamp
     private Instant updatedAt;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Flight flight = (Flight) o;
+        return Objects.equals(id, flight.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

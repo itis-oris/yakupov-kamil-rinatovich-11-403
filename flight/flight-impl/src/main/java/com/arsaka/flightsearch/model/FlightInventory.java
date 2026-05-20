@@ -2,15 +2,13 @@ package com.arsaka.flightsearch.model;
 
 import com.arsaka.common.CabinClass;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
 
 @Builder
@@ -24,12 +22,13 @@ import java.util.UUID;
         columnNames = {"flight_id", "cabin_class"}
     )
 )
-@Data
+@Getter
+@Setter
 public class FlightInventory {
 
+    @Builder.Default
     @Id
-    @GeneratedValue
-    private UUID id;
+    private UUID id = UUID.randomUUID();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "flight_id", nullable = false)
@@ -45,6 +44,7 @@ public class FlightInventory {
     @Column(name = "available_seats", nullable = false)
     private int availableSeats;
 
+    @Builder.Default
     @Column(name = "held_seats", nullable = false)
     private int heldSeats = 0;
 
@@ -58,4 +58,16 @@ public class FlightInventory {
     @Column(name = "updated_at")
     @UpdateTimestamp
     private Instant updatedAt;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        FlightInventory that = (FlightInventory) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

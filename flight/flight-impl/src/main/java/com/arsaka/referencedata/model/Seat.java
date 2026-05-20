@@ -3,8 +3,10 @@ package com.arsaka.referencedata.model;
 import com.arsaka.common.CabinClass;
 import com.arsaka.search.response.dto.SeatType;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -13,12 +15,12 @@ import java.util.UUID;
         name = "seat-airplane_type_code-and-number-uq",
         columnNames = {"airplane_type_code", "number"}
 ))
-@Data
+@Getter
+@Setter
 public class Seat {
 
     @Id
-    @GeneratedValue
-    private UUID id;
+    private UUID id = UUID.randomUUID();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "airplane_type_code", nullable = false)
@@ -40,4 +42,16 @@ public class Seat {
 
     @Column(name = "is_exit_row", nullable = false)
     private boolean exitRow = false;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Seat seat = (Seat) o;
+        return Objects.equals(id, seat.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

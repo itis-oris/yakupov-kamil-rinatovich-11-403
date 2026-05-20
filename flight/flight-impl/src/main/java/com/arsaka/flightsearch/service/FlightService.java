@@ -23,6 +23,7 @@ import com.arsaka.flightsearch.util.FlightSearchCursor;
 import com.arsaka.flightsearch.repository.FlightQueryRepository;
 import com.arsaka.updaterequest.UpdateFlightRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +32,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FlightService {
 
     private final FlightQueryRepository queryRepository;
@@ -56,7 +58,8 @@ public class FlightService {
         FlightRecord record = queryRepository.findFlight(flightId, cabinClass);
 
         if (record == null) {
-            throw new FlightInventoryNotFoundException(flightId, cabinClass);
+            log.debug("flight inventory not found exception | flight id={} | cabin class={}", flightId, cabinClass);
+            throw new FlightInventoryNotFoundException();
         }
 
         return record;
@@ -64,7 +67,10 @@ public class FlightService {
 
     public Flight findById(UUID id) {
         return commandRepository.findById(id)
-                .orElseThrow(() -> new FlightNotFoundException(id));
+                .orElseThrow(() -> {
+                    log.debug("flight not found exception | flight id={}", id);
+                    return new FlightNotFoundException();}
+                );
     }
 
     @Transactional
@@ -95,10 +101,10 @@ public class FlightService {
         if (request.airplaneId() != null) {
             Airplane airplane = airplaneService.findById(request.airplaneId());
             if(!airplane.getAirplaneType().equals(flight.getAirplaneType())) {
-                throw new AirplaneTypeMismatchException(
+                log.debug("Assigned airplane type does not match flight airplane type exception | assigned airplane type code={} | required airplane type code={}",
                         airplane.getAirplaneType().getCode(),
-                        flight.getAirplaneType().getCode()
-                );
+                        flight.getAirplaneType().getCode());
+                throw new AirplaneTypeMismatchException();
             }
             flight.setAirplane(airplane);
         }

@@ -32,6 +32,9 @@ public class ReservationController {
             @AuthenticationPrincipal UUID accountId,
             @Valid @RequestBody(required = false) ReservationsSearchRequest request
     ) {
+        if(request == null) {
+            request = new ReservationsSearchRequest(null, null);
+        }
         ReservationsSearchResponse response = ticketService.getTickets(accountId, request);
         return ResponseEntity.ok(response);
     }
