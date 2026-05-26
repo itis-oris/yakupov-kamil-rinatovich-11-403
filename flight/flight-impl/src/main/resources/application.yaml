@@ -1,0 +1,63 @@
+server:
+  port: ${SERVER_PORT}
+  error:
+    whitelabel:
+          enabled: false
+
+spring:
+  application:
+    name: oris-flight-service
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+    open-in-view: false
+
+  jooq:
+    sql-dialect: POSTGRES
+    datasource:
+      url: ${DB_URL}
+      username: ${DB_USERNAME}
+      password: ${DB_PASSWORD}
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+
+  liquibase:
+    change-log: classpath:db/database-changelog-master.yaml
+    enabled: true
+
+springdoc:
+  api-docs:
+    enabled: ${SWAGGER_ENABLED:true}
+
+  swagger-ui:
+    enabled: ${SWAGGER_ENABLED:true}
+    path: /docs
+    try-it-out-enabled: true
+    display-request-duration: true
+    operations-sorter: method
+    tags-sorter: alpha
+
+auth:
+  service:
+    url: ${AUTH_SERVICE_URL}
+
+pricing:
+  secret: ${PRICING_SECRET}
+
+logging:
+  level:
+    com.arsaka: DEBUG

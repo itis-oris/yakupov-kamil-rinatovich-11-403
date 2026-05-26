@@ -1,0 +1,58 @@
+services:
+
+  postgres:
+    image: postgres:16
+    container_name: oris-auth-postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - oris-network
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    container_name: oris-auth-redis
+    networks:
+      - oris-network
+    volumes:
+      - redis-data:/data
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: oris-auth-service
+    networks:
+      - oris-network
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      SERVER_PORT: 8081
+
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+
+      SPRING_DATA_REDIS_HOST: ${REDIS_HOST}
+      SPRING_DATA_REDIS_PORT: ${REDIS_PORT}
+
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_ACCESS_EXP: 600000
+      JWT_REFRESH_EXP: 604800000
+      JWT_MAX_REFRESH: 5
+
+
+
+networks:
+  oris-network:
+    external: true
+
+volumes:
+  postgres-data:
+  redis-data:

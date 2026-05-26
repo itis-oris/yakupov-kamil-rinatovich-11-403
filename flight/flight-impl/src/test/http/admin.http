@@ -1,0 +1,225 @@
+@host = http://localhost:8091
+@accessToken = eyJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiJkOWYxZmY0YS0xOTRhLTRmM2EtYTMyYS00MmExYTM4NjIxYmIiLCJpYXQiOjE3NzkzNTk3MDEsImV4cCI6MTc3OTM2NTcwMX0.I2vJANU-jFvI4mnh64LK58QVf7WyOk0kcJQcF5Tekc4mhXJvOmD9fe6pcWi6bmR2zosxy6aYFdFPgFl6BBDdhw
+@flightId = f1000000-0000-0000-0000-000000000001
+@routeId = b1000000-0000-0000-0000-000000000005
+@inventoryId = b4f8c9ab-f159-43b4-a4c3-a1082184a3c7
+@fareId = c1000000-0000-0000-0000-000000000001
+@ruleId = 070121ac-0b6d-4987-a659-507c190688f4
+@adjId = 2823b57d-b99b-4986-9668-6b637b567c9c
+@airplaneId = 3c0dbfd0-1819-455f-ab0e-8e6144eed4ac
+
+###
+GET {{host}}/api/v1/admin/flights/airlines
+Cookie: accessToken={{accessToken}}
+
+###
+POST {{host}}/api/v1/admin/flights/airlines
+Content-Type: application/json
+Cookie: accessToken={{accessToken}}
+
+{
+  "code": "S8",
+  "name": "S8 Airlines",
+  "countryCode": "RU"
+}
+
+###
+DELETE {{host}}/api/v1/admin/flights/airlines/S8
+Cookie: accessToken={{accessToken}}
+
+###
+GET {{host}}/api/v1/admin/flights/airplanes?airlineCode=SU&page=0&size=10
+Cookie: accessToken={{accessToken}}
+
+###
+GET {{host}}/api/v1/admin/flights/airplanes?airplaneTypeCode=A20&page=0&size=10
+Cookie: accessToken={{accessToken}}
+
+###
+POST {{host}}/api/v1/admin/flights/airplanes
+Content-Type: application/json
+Cookie: accessToken={{accessToken}}
+
+{
+  "number": "VP-TEST",
+  "airplaneTypeCode": "A20",
+  "airlineCode": "S7",
+  "manufacturedYear": 2020
+}
+
+###
+DELETE {{host}}/api/v1/admin/flights/airplanes/{{airplaneId}}
+Cookie: accessToken={{accessToken}}
+
+###
+GET {{host}}/api/v1/admin/flights?status=scheduled&page=0&size=10
+Cookie: accessToken={{accessToken}}
+
+###
+GET {{host}}/api/v1/admin/flights?routeId={{routeId}}&page=0&size=10
+Cookie: accessToken={{accessToken}}
+
+###
+POST {{host}}/api/v1/admin/flights
+Content-Type: application/json
+Cookie: accessToken={{accessToken}}
+
+{
+  "routeId": "{{routeId}}",
+  "airplaneTypeCode": "A20",
+  "airplaneId": "{{airplaneId}}",
+  "scheduledTime": {
+    "departure": "2026-08-01T10:00:00Z",
+    "arrival":   "2026-08-01T12:30:00Z"
+  }
+}
+
+
+###
+PATCH {{host}}/api/v1/admin/flights/{{flightId}}
+Content-Type: application/json
+Cookie: accessToken={{accessToken}}
+
+{
+  "status": "on time"
+}
+
+###
+PATCH {{host}}/api/v1/admin/flights/{{flightId}}
+Content-Type: application/json
+Cookie: accessToken={{accessToken}}
+
+{
+  "actualTime": {
+    "departure": "2026-08-01T10:05:00Z",
+    "arrival":   "2026-08-01T12:35:00Z"
+  }
+}
+
+###
+GET {{host}}/api/v1/admin/flights/inventories?flightId={{flightId}}&page=0&size=10
+Cookie: accessToken={{accessToken}}
+
+
+###
+POST {{host}}/api/v1/admin/flights/inventories
+Content-Type: application/json
+Cookie: accessToken={{accessToken}}
+
+{
+  "flightId":   "{{flightId}}",
+  "cabinClass": "economy",
+  "price":      4500.00
+}
+
+
+###
+PATCH {{host}}/api/v1/admin/flights/inventories/{{inventoryId}}
+Content-Type: application/json
+Cookie: accessToken={{accessToken}}
+
+{
+  "price": 3999.00
+}
+
+###
+GET {{host}}/api/v1/admin/flights/fares?airlineCode=SU&cabinClass=economy&page=0&size=10
+Cookie: accessToken={{accessToken}}
+
+###
+POST {{host}}/api/v1/admin/flights/fares
+Content-Type: application/json
+Cookie: accessToken={{accessToken}}
+
+{
+  "airlineCode":    "SU",
+  "cabinClass":     "economy",
+  "name":           "Economy Flex",
+  "baggageIncluded": true,
+  "isRefundable":   false
+}
+
+###
+DELETE {{host}}/api/v1/admin/flights/fares/{{fareId}}
+Cookie: accessToken={{accessToken}}
+
+###
+GET {{host}}/api/v1/admin/flights/pricing/rules?fareId={{fareId}}&page=0&size=10
+Cookie: accessToken={{accessToken}}
+
+###
+POST {{host}}/api/v1/admin/flights/pricing/rules
+Content-Type: application/json
+Cookie: accessToken={{accessToken}}
+
+{
+  "fareId":        "{{fareId}}",
+  "passengerType": "adult",
+  "multiplier":    1.00
+}
+
+###
+POST {{host}}/api/v1/admin/flights/pricing/rules
+Content-Type: application/json
+Cookie: accessToken={{accessToken}}
+
+{
+  "fareId":        "{{fareId}}",
+  "passengerType": "child",
+  "multiplier":    0.75
+}
+
+###
+PATCH {{host}}/api/v1/admin/flights/pricing/rules/{{ruleId}}
+Content-Type: application/json
+Cookie: accessToken={{accessToken}}
+
+{
+  "multiplier": 0.90
+}
+
+###
+DELETE {{host}}/api/v1/admin/flights/pricing/rules/{{ruleId}}
+Cookie: accessToken={{accessToken}}
+
+###
+GET {{host}}/api/v1/admin/flights/pricing/adjustments?flightId={{flightId}}&page=0&size=10
+Cookie: accessToken={{accessToken}}
+
+###
+POST {{host}}/api/v1/admin/flights/pricing/adjustments
+Content-Type: application/json
+Cookie: accessToken={{accessToken}}
+
+{
+  "flightId": "{{flightId}}",
+  "fareId":   "{{fareId}}",
+  "type":     "per",
+  "value":    -10.00
+}
+
+###
+PATCH {{host}}/api/v1/admin/flights/pricing/adjustments/{{adjId}}
+Content-Type: application/json
+Cookie: accessToken={{accessToken}}
+
+{
+  "type":  "per",
+  "value": -5.00
+}
+
+###
+DELETE {{host}}/api/v1/admin/flights/pricing/adjustments/{{adjId}}
+Cookie: accessToken={{accessToken}}
+
+###
+GET {{host}}/api/v1/admin/flights/routes/search?departureAirportCode=SVO&arrivalAirportCode=LED
+Cookie: accessToken={{accessToken}}
+
+###
+GET {{host}}/api/v1/admin/flights/routes/without-flights
+Cookie: accessToken={{accessToken}}
+
+###
+GET {{host}}/api/v1/admin/flights/routes/conflicting?date=2026-05-21T00:00:00Z
+Cookie: accessToken={{accessToken}}

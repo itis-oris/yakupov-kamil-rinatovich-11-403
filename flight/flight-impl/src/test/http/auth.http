@@ -1,0 +1,42 @@
+@host = http://localhost:8081
+@accountId = d9f1ff4a-194a-4f3a-a32a-42a1a38621bb
+
+### Register
+POST {{host}}/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "email": "test01@gmail.com",
+  "username": "test",
+  "password": "testTest0"
+}
+
+### Login
+POST {{host}}/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "test01@gmail.com",
+  "password": "testTest0"
+}
+
+### Refresh
+POST {{host}}/api/v1/auth/refresh
+Cookie: refreshToken=ed7fa379-08b2-4de7-84b2-ba353b38a22e
+
+### Logout
+POST {{host}}/api/v1/auth/logout
+Cookie: refreshToken=044bb176-17ab-4532-aab1-b85dfa41e0bb
+
+### Get account by ID
+GET {{host}}/api/v1/account/{{accountId}}
+Cookie: accessToken=eyJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6ImQ5ZjFmZjRhLTE5NGEtNGYzYS1hMzJhLTQyYTFhMzg2MjFiYiIsImlhdCI6MTc3OTM1OTM2MCwiZXhwIjoxNzc5MzY1MzYwfQ.rFfRuP8R2NRMKk0Ioy5zXvzpFJAPiSP5tjjZ6L2OCLKDrIykLwJ5flddfGbQ4TLnwFYvGkEdKcH6C1s74BIPGA
+
+### Update username
+PATCH {{host}}/api/v1/account/{{accountId}}
+Content-Type: application/json
+Cookie: accessToken=eyJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6ImQ5ZjFmZjRhLTE5NGEtNGYzYS1hMzJhLTQyYTFhMzg2MjFiYiIsImlhdCI6MTc3OTM1OTM2MCwiZXhwIjoxNzc5MzY1MzYwfQ.rFfRuP8R2NRMKk0Ioy5zXvzpFJAPiSP5tjjZ6L2OCLKDrIykLwJ5flddfGbQ4TLnwFYvGkEdKcH6C1s74BIPGA
+
+{
+  "username": "newusernametest"
+}

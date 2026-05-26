@@ -1,0 +1,79 @@
+@host = http://localhost:8091
+@accessToken = eyJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiJkOWYxZmY0YS0xOTRhLTRmM2EtYTMyYS00MmExYTM4NjIxYmIiLCJpYXQiOjE3NzkzNTk3MDEsImV4cCI6MTc3OTM2NTcwMX0.I2vJANU-jFvI4mnh64LK58QVf7WyOk0kcJQcF5Tekc4mhXJvOmD9fe6pcWi6bmR2zosxy6aYFdFPgFl6BBDdhw
+@flightId = f1000000-0000-0000-0000-000000000001
+@fareId = c1000000-0000-0000-0000-000000000001
+@ticketId = t1000000-0000-0000-0000-000000000001
+@bookingId = b1000000-0000-0000-0000-000000000001
+
+
+POST {{host}}/api/v1/flights/search
+Content-Type: application/json
+
+{
+  "cityCodeFrom": "MOW",
+  "cityCodeTo": "FRA",
+  "scheduledDate": {
+    "departure": "2026-06-01"
+  },
+  "cabinClass": "economy",
+  "passengers": {
+    "adult": 1
+  }
+}
+
+###
+GET {{host}}/api/v1/flights/{{flightId}}?fareId={{fareId}}&passengerType=adult
+
+###
+POST {{host}}/api/v1/flights/reservations/search
+Content-Type: application/json
+Cookie: accessToken={{accessToken}}
+
+{}
+
+###
+POST {{host}}/api/v1/flights/reservations/search
+Content-Type: application/json
+Cookie: accessToken={{accessToken}}
+
+{
+  "status": "issued"
+}
+
+###
+GET {{host}}/api/v1/flights/reservations/{{ticketId}}
+Cookie: accessToken={{accessToken}}
+
+###
+POST {{host}}/api/v1/flights/reservations/hold
+Content-Type: application/json
+Cookie: accessToken={{accessToken}}
+
+{
+  "flights": [
+    {
+      "flightId": "{{flightId}}",
+      "fareId": "{{fareId}}",
+      "seatId": null,
+      "passengerType": "adult",
+      "totalPrice": 5000.00,
+      "priceHash": "<paste_price_hash_here>",
+      "passenger": {
+        "firstName": "Ivan",
+        "lastName": "Ivanov",
+        "dateOfBirth": "1990-01-01",
+        "gender": "male",
+        "document": {
+          "type": "passport",
+          "number": "123456789",
+          "countryCode": "RU"
+        }
+      }
+    }
+  ]
+}
+
+###
+DELETE {{host}}/api/v1/flights/reservations/{{bookingId}}
+Cookie: accessToken={{accessToken}}
+
