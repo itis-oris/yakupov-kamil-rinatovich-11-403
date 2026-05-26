@@ -3,11 +3,10 @@ package com.arsaka.auth.controller;
 import com.arsaka.auth.response.AccountResponse;
 import com.arsaka.auth.service.AuthServiceClient;
 import com.arsaka.common.*;
-import com.arsaka.referencedata.service.AIrportService;
+import com.arsaka.referencedata.service.AirportService;
 import com.arsaka.referencedata.service.AirplaneTypeService;
 import com.arsaka.referencedata.service.CountryService;
 import com.arsaka.referencedata.service.RouteAdminService;
-import com.arsaka.search.request.RouteFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -26,8 +25,7 @@ public class AdminViewController {
     private final AuthServiceClient authServiceClient;
     private final AirplaneTypeService airplaneTypeService;
     private final CountryService countryService;
-    private final AIrportService aIrportService;
-    private final RouteAdminService routeAdminService;
+    private final AirportService aIrportService;
 
     @GetMapping
     public String adminPage(

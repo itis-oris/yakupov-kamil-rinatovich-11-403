@@ -64,11 +64,15 @@ public class FlightEventOrchestratorService {
     }
 
     @Transactional
-    public void cancel(UUID bookingId) {
+    public void cancel(UUID accountId, UUID bookingId) {
         log.debug("starting flights hold cancel | bookingId={}", bookingId);
 
         List<TicketRecord> tickets = ticketService.releaseHoldAndGetTickets(bookingId);
         log.debug("get flights tickets to cancel | tickets={} | bookingId={}", tickets, bookingId);
+
+        log.debug("starting flights booking ownership checking | bookingId={} | accountId={}", bookingId, accountId);
+        bookingService.checkBookingAccountId(accountId, bookingId);
+        log.debug("flights booking ownership check passed | bookingId={} | accountId={}", bookingId, accountId);
 
         log.debug("starting flights tickets mapping | bookingId={}", bookingId);
         ticketMapper.map(tickets);

@@ -46,14 +46,4 @@ public class AccountViewController {
         model.addAttribute("isAuthenticated", true);
         return "account/reservations";
     }
-
-    @PatchMapping("/me/username")
-    @ResponseBody
-    public ResponseEntity<AccountResponse> updateUsername(
-            @AuthenticationPrincipal UUID accountId,
-            @RequestBody Map<String, String> body
-    ) {
-        AccountResponse updated = authServiceClient.updateUsername(accountId, body.get("username"));
-        return ResponseEntity.ok(updated);
-    }
 }

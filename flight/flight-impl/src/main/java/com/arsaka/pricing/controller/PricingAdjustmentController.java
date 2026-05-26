@@ -1,64 +1,47 @@
 package com.arsaka.pricing.controller;
 
+import com.arsaka.controller.PricingAdjustmentApi;
 import com.arsaka.search.response.AdminPage;
 import com.arsaka.search.request.dto.AdminPageRequest;
 import com.arsaka.create.request.CreatePricingAdjustmentRequest;
 import com.arsaka.create.response.PricingAdjustmentResponse;
 import com.arsaka.pricing.service.PricingAdjustmentService;
 import com.arsaka.updaterequest.UpdatePricingAdjustmentRequest;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/admin/flights/pricing/adjustments")
 @RequiredArgsConstructor
-@Validated
-@Slf4j
-public class PricingAdjustmentController {
+public class PricingAdjustmentController implements PricingAdjustmentApi {
 
     private final PricingAdjustmentService service;
 
-    @PostMapping
-    public ResponseEntity<PricingAdjustmentResponse> create(
-            @Valid @RequestBody CreatePricingAdjustmentRequest request
-    ) {
+    @Override
+    public ResponseEntity<PricingAdjustmentResponse> create(CreatePricingAdjustmentRequest request) {
         PricingAdjustmentResponse response = service.create(request);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(response);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<PricingAdjustmentResponse> update(
-            @PathVariable UUID id,
-            @Valid @RequestBody UpdatePricingAdjustmentRequest request
-    ) {
+    @Override
+    public ResponseEntity<PricingAdjustmentResponse> update(UUID id, UpdatePricingAdjustmentRequest request) {
         PricingAdjustmentResponse response = service.update(id, request);
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(
-            @PathVariable UUID id
-    ) {
+    @Override
+    public ResponseEntity<Void> delete(UUID id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
-    public ResponseEntity<AdminPage<PricingAdjustmentResponse>> listAdjustments(
-            @RequestParam(required = false) UUID flightId,
-            @RequestParam(required = false) UUID fareId,
-            @RequestParam(required = false) Integer page,
-            @RequestParam(required = false) Integer size
-    ) {
+    @Override
+    public ResponseEntity<AdminPage<PricingAdjustmentResponse>> listAdjustments(UUID flightId, UUID fareId, Integer page, Integer size) {
         AdminPage<PricingAdjustmentResponse> response = service.findAdjustments(flightId, fareId, AdminPageRequest.of(page, size));
         return ResponseEntity.ok(response);
     }

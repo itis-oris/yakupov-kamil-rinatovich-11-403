@@ -1,5 +1,6 @@
 package com.arsaka.pricing.controller;
 
+import com.arsaka.controller.PricingRuleApi;
 import com.arsaka.search.response.AdminPage;
 import com.arsaka.search.request.dto.AdminPageRequest;
 import com.arsaka.create.request.CreatePricingRuleRequest;
@@ -17,49 +18,34 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/admin/flights/pricing/rules")
 @RequiredArgsConstructor
-@Validated
-@Slf4j
-public class PricingRuleController {
+public class PricingRuleController implements PricingRuleApi {
 
     private final PricingRuleService service;
 
-    @PostMapping
-    public ResponseEntity<PricingRuleResponse> create(
-            @Valid @RequestBody CreatePricingRuleRequest request
-    ) {
+    @Override
+    public ResponseEntity<PricingRuleResponse> create(CreatePricingRuleRequest request) {
         PricingRuleResponse response = service.create(request);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(response);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<PricingRuleResponse> update(
-            @PathVariable UUID id,
-            @Valid @RequestBody UpdatePricingRuleRequest request
-    ) {
+    @Override
+    public ResponseEntity<PricingRuleResponse> update(UUID id, UpdatePricingRuleRequest request) {
         PricingRuleResponse response = service.update(id, request);
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(
-            @PathVariable UUID id
-    ) {
+    @Override
+    public ResponseEntity<Void> delete(UUID id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
-    public ResponseEntity<AdminPage<PricingRuleResponse>> listRules(
-            @RequestParam(required = false) UUID fareId,
-            @RequestParam(required = false) Integer page,
-            @RequestParam(required = false) Integer size
-    ) {
+    @Override
+    public ResponseEntity<AdminPage<PricingRuleResponse>> listRules(UUID fareId, Integer page, Integer size) {
         AdminPage<PricingRuleResponse> response = service.findRules(fareId, AdminPageRequest.of(page, size));
-
         return ResponseEntity.ok(response);
     }
 }

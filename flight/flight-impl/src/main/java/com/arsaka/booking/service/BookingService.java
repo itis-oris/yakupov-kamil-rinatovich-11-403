@@ -1,5 +1,6 @@
 package com.arsaka.booking.service;
 
+import com.arsaka.booking.exception.BookingAccessDeniedException;
 import com.arsaka.booking.exception.BookingDuplicateException;
 import com.arsaka.booking.exception.BookingNotFoundException;
 import com.arsaka.booking.exception.BookingReleaseHoldException;
@@ -48,6 +49,14 @@ public class BookingService {
         }
 
         repository.setStatus(bookingId, BookingStatus.CANCELLED);
+    }
+
+    public void checkBookingAccountId(UUID accountId, UUID bookingId) {
+        BookingRecord bookingRecord = repository.findById(bookingId);
+        if(!accountId.equals(bookingRecord.getAccountId())) {
+            log.debug("Access denied to booking exception | account id={} | booking id={}", accountId, bookingId);
+            throw new BookingAccessDeniedException();
+        }
     }
 
     public void confirm(UUID bookingId) {

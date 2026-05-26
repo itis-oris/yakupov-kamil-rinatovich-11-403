@@ -6,13 +6,17 @@ import com.arsaka.auth.exception.AuthServiceUnavailableException;
 import com.arsaka.auth.exception.ValidationException;
 import com.arsaka.auth.request.LoginRequest;
 import com.arsaka.auth.request.RegisterRequest;
+import com.arsaka.auth.request.UpdateUsernameRequest;
 import com.arsaka.auth.request.ValidateRequest;
 import com.arsaka.auth.response.AccountResponse;
 import com.arsaka.auth.response.RegisterResponse;
 import com.arsaka.auth.response.ValidateResponse;
+import com.arsaka.config.CacheName;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +28,7 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = CacheName.VALIDATE_REQUEST)
 @Slf4j
 public class AuthServiceClient {
 
@@ -132,6 +137,7 @@ public class AuthServiceClient {
 
     }
 
+    @Cacheable(key = "{#accessToken, #path, #method}")
     public ValidateResponse validate(String accessToken, String path, String method) {
         try {
             return restClient
@@ -151,7 +157,7 @@ public class AuthServiceClient {
             throw e;
 
         } catch (Exception e) {
-            log.warn("Token validation failed: {}", e.getMessage());
+            log.error("Token validation failed | message={}", e.getMessage(), e);
             throw new ValidationException();
         }
     }
@@ -178,12 +184,12 @@ public class AuthServiceClient {
         }
     }
 
-    public AccountResponse updateUsername(UUID accountId, String username) {
+    public AccountResponse updateUsername(UUID accountId, UpdateUsernameRequest request) {
         try {
             return restClient
                     .patch()
                     .uri("/api/v1/account/%s".formatted(accountId))
-                    .body(Map.of("username", username))
+                    .body(request)
                     .retrieve()
                     .onStatus(HttpStatusCode::isError, (req, res) -> {
                         ApiException apiException = mapper.readValue(

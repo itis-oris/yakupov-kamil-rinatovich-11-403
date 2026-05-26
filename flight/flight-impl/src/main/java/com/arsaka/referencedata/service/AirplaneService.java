@@ -1,5 +1,6 @@
 package com.arsaka.referencedata.service;
 
+import com.arsaka.config.CacheName;
 import com.arsaka.search.response.AdminPage;
 import com.arsaka.search.request.dto.AdminPageRequest;
 import com.arsaka.create.request.CreateAirplaneRequest;
@@ -13,6 +14,9 @@ import com.arsaka.referencedata.model.AirplaneType;
 import com.arsaka.referencedata.repository.AirplaneCommandRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;

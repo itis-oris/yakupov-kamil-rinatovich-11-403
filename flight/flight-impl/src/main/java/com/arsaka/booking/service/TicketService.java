@@ -66,6 +66,9 @@ public class TicketService {
     }
 
     public ReservationsSearchResponse getTickets(UUID accountId, ReservationsSearchRequest request) {
+        if(request == null) {
+            request = new ReservationsSearchRequest(null, null);
+        }
         TicketSearchCursor cursor = TicketCursorUtil.decode(request.nextCursor());
 
         List<TicketSearchRecord> ticketSearchRecords = repository.findTickets(

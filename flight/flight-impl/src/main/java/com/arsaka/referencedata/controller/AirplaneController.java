@@ -1,5 +1,6 @@
 package com.arsaka.referencedata.controller;
 
+import com.arsaka.controller.AirplaneApi;
 import com.arsaka.search.response.AdminPage;
 import com.arsaka.search.request.dto.AdminPageRequest;
 import com.arsaka.create.request.CreateAirplaneRequest;
@@ -16,39 +17,27 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/admin/flights/airplanes")
 @RequiredArgsConstructor
-@Validated
-@Slf4j
-public class AirplaneController {
+public class AirplaneController implements AirplaneApi {
 
     private final AirplaneService service;
 
-    @PostMapping
-    public ResponseEntity<AirplaneResponse> create(
-            @Valid @RequestBody CreateAirplaneRequest request
-    ) {
+    @Override
+    public ResponseEntity<AirplaneResponse> create(CreateAirplaneRequest request) {
         AirplaneResponse response = service.create(request);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(response);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(
-            @PathVariable UUID id
-    ) {
+    @Override
+    public ResponseEntity<Void> delete(UUID id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
-    public ResponseEntity<AdminPage<AirplaneResponse>> listAirplanes(
-            @RequestParam(required = false) String airlineCode,
-            @RequestParam(required = false) String airplaneTypeCode,
-            @RequestParam(required = false) Integer page,
-            @RequestParam(required = false) Integer size
-    ) {
+    @Override
+    public ResponseEntity<AdminPage<AirplaneResponse>> listAirplanes(String airlineCode, String airplaneTypeCode, Integer page, Integer size) {
         AdminPage<AirplaneResponse> response = service.findAirplanes(airlineCode, airplaneTypeCode, AdminPageRequest.of(page, size));
         return ResponseEntity.ok(response);
     }

@@ -18,4 +18,5 @@ public class JacksonConfig {
                 .configure(SerializationFeature.WRITE_BIGDECIMAL_AS_PLAIN, true)
                 .build();
     }
+
 }

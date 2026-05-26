@@ -1,5 +1,6 @@
 package com.arsaka.referencedata.controller;
 
+import com.arsaka.controller.AirlineApi;
 import com.arsaka.search.response.AdminPage;
 import com.arsaka.search.request.dto.AdminPageRequest;
 import com.arsaka.create.request.CreateAirlineRequest;
@@ -16,42 +17,27 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/admin/flights/airlines")
 @RequiredArgsConstructor
-@Validated
-@Slf4j
-public class AirlineController {
+public class AirlineController implements AirlineApi {
 
     private final AirlineService service;
 
-    @PostMapping
-    public ResponseEntity<AirlineResponse> create(
-            @Valid @RequestBody CreateAirlineRequest request
-    ) {
+    @Override
+    public ResponseEntity<AirlineResponse> create(CreateAirlineRequest request) {
         AirlineResponse response = service.create(request);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(response);
     }
 
-    @DeleteMapping("/{code}")
-    public ResponseEntity<Void> delete(
-            @PathVariable
-            @NotBlank
-            @Pattern(regexp = "^[A-Z0-9]{2}$")
-            String code
-    ) {
+    @Override
+    public ResponseEntity<Void> delete(String code) {
         service.delete(code);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
-    public ResponseEntity<AdminPage<AirlineResponse>> listAirlines(
-            @RequestParam(required = false) String countryCode,
-            @RequestParam(required = false) Boolean active,
-            @RequestParam(required = false) Integer page,
-            @RequestParam(required = false) Integer size
-    ) {
+    @Override
+    public ResponseEntity<AdminPage<AirlineResponse>> listAirlines(String countryCode, Boolean active, Integer page, Integer size) {
         AdminPage<AirlineResponse> response =  service.findAirlines(countryCode, active, AdminPageRequest.of(page, size));
         return ResponseEntity.ok(response);
     }
