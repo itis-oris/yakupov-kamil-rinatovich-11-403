@@ -1,0 +1,110 @@
+package com.oris.pricing.service;
+
+import com.oris.search.response.AdminPage;
+import com.oris.search.request.dto.AdminPageRequest;
+import com.oris.create.request.CreatePricingRuleRequest;
+import com.oris.create.response.PricingRuleResponse;
+import com.oris.pricing.exception.PricingRuleAlreadyExistsException;
+import com.oris.pricing.exception.PricingRuleNotFoundException;
+import com.oris.pricing.mapper.PricingRuleMapper;
+import com.oris.pricing.model.Fare;
+import com.oris.pricing.model.PricingRule;
+import com.oris.pricing.repository.PricingRuleRepository;
+import com.oris.updaterequest.UpdatePricingRuleRequest;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class PricingRuleService {
+
+    private final PricingRuleRepository repository;
+    private final FareService fareService;
+    private final PricingRuleMapper mapper;
+
+    @Transactional
+    public PricingRuleResponse create(CreatePricingRuleRequest request) {
+        Fare fare = fareService.findById(request.fareId());
+
+        PricingRule pricingRule = repository.findByFareAndPassengerType(fare, request.passengerType()).orElse(null);
+
+        if (pricingRule != null) {
+            if (pricingRule.isActive()) {
+                log.debug("Pricing rule already exists | fare id={} | passenger type={}", fare.getId(), request.passengerType());
+                throw new PricingRuleAlreadyExistsException();
+            }
+            pricingRule.setActive(true);
+            return mapper.toResponse(pricingRule);
+        }
+
+        pricingRule = mapper.toEntity(request, fare);
+
+        PricingRule saved = repository.save(pricingRule);
+
+        return mapper.toResponse(saved);
+    }
+
+    @Transactional
+    public PricingRuleResponse update(UUID id, UpdatePricingRuleRequest request) {
+        PricingRule pricingRule = findById(id);
+
+        if(!pricingRule.isActive()) {
+            log.debug("Pricing rule not active | id={}", id);
+            throw new PricingRuleNotFoundException();
+        }
+
+        pricingRule.setMultiplier(request.multiplier());
+
+        return mapper.toResponse(pricingRule);
+    }
+
+    private PricingRule findById(UUID id) {
+        return repository.findById(id)
+                .orElseThrow(() -> {
+                    log.debug("Pricing rule not found exception | id={}", id);
+                    return new PricingRuleNotFoundException();
+                });
+    }
+
+
+    @Transactional
+    public void delete(UUID id) {
+        PricingRule pricingRule = findById(id);
+        pricingRule.setActive(false);
+    }
+
+    @Transactional
+    public AdminPage<PricingRuleResponse> findRules(
+            UUID fareId,
+            AdminPageRequest pageReq
+    ) {
+        Specification<PricingRule> spec = Specification.where(null);
+
+        if (fareId != null) {
+            spec = spec.and((root, q, cb) ->
+                    cb.equal(root.get("fare").get("id"), fareId));
+        }
+
+        Page<PricingRule> page = repository.findAll(
+                spec,
+                PageRequest.of(pageReq.page(), pageReq.size(), Sort.by("fare"))
+        );
+
+        List<PricingRuleResponse> content = page.getContent()
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+
+        return AdminPage.of(content, pageReq, page.getTotalElements());
+    }
+}

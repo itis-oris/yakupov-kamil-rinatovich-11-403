@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.arsaka</groupId>
+        <groupId>com.oris</groupId>
         <artifactId>flight</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
@@ -25,17 +25,17 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.arsaka</groupId>
+            <groupId>com.oris</groupId>
             <artifactId>flight-api</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.arsaka</groupId>
+            <groupId>com.oris</groupId>
             <artifactId>flight-db</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.arsaka</groupId>
+            <groupId>com.oris</groupId>
             <artifactId>auth-api</artifactId>
         </dependency>
 
@@ -212,7 +212,7 @@
                         </database>
 
                         <target>
-                            <packageName>com.arsaka.jooq</packageName>
+                            <packageName>com.oris.jooq</packageName>
                             <directory>target/generated-sources/jooq</directory>
                             <encoding>UTF-8</encoding>
                         </target>
