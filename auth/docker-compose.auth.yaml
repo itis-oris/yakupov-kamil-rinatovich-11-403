@@ -3,8 +3,6 @@ services:
   postgres:
     image: postgres:16
     container_name: oris-auth-postgres
-    ports:
-      - "5432:5432"
     networks:
       - oris-network
     environment:
@@ -33,7 +31,7 @@ services:
       - postgres
       - redis
     environment:
-      SERVER_PORT: 8081
+      SERVER_PORT: 8080
 
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
