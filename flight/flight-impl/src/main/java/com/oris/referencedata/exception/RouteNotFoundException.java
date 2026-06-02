@@ -1,4 +1,4 @@
-package com.oris.flight.exception;
+package com.oris.referencedata.exception;
 
 import com.oris.exception.NotFoundException;
 

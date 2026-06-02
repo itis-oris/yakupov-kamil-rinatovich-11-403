@@ -1,7 +1,5 @@
-package com.oris.flight.model;
+package com.oris.referencedata.model;
 
-import com.oris.referencedata.model.Airline;
-import com.oris.referencedata.model.Airport;
 import jakarta.persistence.*;
 import lombok.*;
 

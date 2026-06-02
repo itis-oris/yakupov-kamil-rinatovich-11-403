@@ -5,7 +5,7 @@ import com.oris.create.request.dto.Time;
 import com.oris.create.response.FlightResponse;
 import com.oris.flight.dto.FlightRecord;
 import com.oris.flight.model.Flight;
-import com.oris.flight.model.Route;
+import com.oris.referencedata.model.Route;
 import com.oris.referencedata.mapper.AirlineMapper;
 import com.oris.referencedata.mapper.AirplaneTypeMapper;
 import com.oris.referencedata.mapper.AirportMapper;

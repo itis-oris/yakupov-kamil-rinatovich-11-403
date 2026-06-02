@@ -1,6 +1,6 @@
 package com.oris.referencedata.repository;
 
-import com.oris.flight.model.Route;
+import com.oris.referencedata.model.Route;
 import com.oris.referencedata.model.Airport;
 import com.oris.referencedata.model.City;
 import com.oris.referencedata.model.Country;

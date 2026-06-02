@@ -1,7 +1,7 @@
 package com.oris.referencedata.repository;
 
 import com.oris.common.FlightStatus;
-import com.oris.flight.model.Route;
+import com.oris.referencedata.model.Route;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

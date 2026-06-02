@@ -3,6 +3,7 @@ package com.oris.flight.model;
 import com.oris.common.FlightStatus;
 import com.oris.referencedata.model.Airplane;
 import com.oris.referencedata.model.AirplaneType;
+import com.oris.referencedata.model.Route;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UpdateTimestamp;

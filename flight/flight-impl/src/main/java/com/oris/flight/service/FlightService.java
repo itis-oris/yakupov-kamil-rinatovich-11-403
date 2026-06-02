@@ -1,5 +1,6 @@
 package com.oris.flight.service;
 
+import com.oris.referencedata.service.RouteService;
 import com.oris.search.response.AdminPage;
 import com.oris.search.request.dto.AdminPageRequest;
 import com.oris.common.CabinClass;
@@ -13,7 +14,7 @@ import com.oris.flight.exception.AirplaneTypeMismatchException;
 import com.oris.flight.exception.FlightNotFoundException;
 import com.oris.flight.mapper.FlightMapper;
 import com.oris.flight.model.Flight;
-import com.oris.flight.model.Route;
+import com.oris.referencedata.model.Route;
 import com.oris.flight.repository.FlightCommandRepository;
 import com.oris.referencedata.model.Airplane;
 import com.oris.referencedata.model.AirplaneType;

@@ -1,8 +1,8 @@
-package com.oris.flight.service;
+package com.oris.referencedata.service;
 
-import com.oris.flight.exception.RouteNotFoundException;
-import com.oris.flight.model.Route;
-import com.oris.flight.repository.RouteRepository;
+import com.oris.referencedata.exception.RouteNotFoundException;
+import com.oris.referencedata.model.Route;
+import com.oris.referencedata.repository.RouteCommandRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import java.util.UUID;
 @Slf4j
 public class RouteService {
 
-    private final RouteRepository repository;
+    private final RouteCommandRepository repository;
 
     public Route findById(UUID id) {
         return repository.findById(id)

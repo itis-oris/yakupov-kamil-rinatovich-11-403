@@ -1,6 +1,6 @@
 package com.oris.referencedata.mapper;
 
-import com.oris.flight.model.Route;
+import com.oris.referencedata.model.Route;
 import com.oris.search.response.RouteResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

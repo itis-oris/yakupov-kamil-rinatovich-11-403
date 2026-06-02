@@ -14,25 +14,6 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI flightServiceOpenAPI() {
 
-//        final String securitySchemeName = "bearerAuth";
-//
-//        return new OpenAPI()
-//                .info(new Info()
-//                        .title("Flight Service API")
-//                        .description("Flight management service is part of a custom tour-building platform")
-//                        .version("1.0.0")
-//                        .contact(new Contact()
-//                                .name("ASK Backend Team"))
-//                )
-//                .schemaRequirement(
-//                        securitySchemeName,
-//                        new SecurityScheme()
-//                                .name(securitySchemeName)
-//                                .type(SecurityScheme.Type.HTTP)
-//                                .scheme("bearer")
-//                                .bearerFormat("JWT")
-//                );
-
         final String securitySchemeName = "cookieAuth";
 
         return new OpenAPI()
