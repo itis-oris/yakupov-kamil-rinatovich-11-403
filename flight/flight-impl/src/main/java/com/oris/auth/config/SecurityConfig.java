@@ -30,9 +30,6 @@ public class SecurityConfig {
             "/flights/**",
             "/css/**",
             "/js/**",
-            "/images/**",
-            "/favicon.ico",
-            "/.well-known/**",
             "/api/v1/auth/**",
             "/api/v1/flights/**"
     };

@@ -1,6 +1,9 @@
 package com.oris.auth.filter;
 
 import com.oris.auth.common.AccessDeniedReason;
+import com.oris.auth.exception.ApiException;
+import com.oris.auth.exception.AuthenticationTokenCookieException;
+import com.oris.auth.exception.ValidationException;
 import com.oris.auth.service.AuthServiceClient;
 import com.oris.auth.response.ValidateResponse;
 import com.oris.auth.util.AuthorizationCookieUtil;
@@ -43,9 +46,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             "/flights/",
             "/css/",
             "/js/",
-            "/images/",
-            "/favicon",
-            "/.well-known/"
+            "/images/"
     );
     private static final Set<String> PUBLIC_EXACT = Set.of(
             "/",

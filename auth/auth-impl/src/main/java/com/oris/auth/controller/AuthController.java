@@ -24,7 +24,7 @@ import java.time.Duration;
 @RequiredArgsConstructor
 @Validated
 @Slf4j
-public class AuthController {
+public class  AuthController {
 
     private final AuthOrchestrationService service;
 
