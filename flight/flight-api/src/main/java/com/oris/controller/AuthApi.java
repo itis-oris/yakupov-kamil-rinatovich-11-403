@@ -24,15 +24,6 @@ import org.springframework.web.bind.annotation.*;
 public interface AuthApi {
 
     @Operation(summary = "User login")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Login successful(sets cookies)"),
-            @ApiResponse(responseCode = "400", description = "Invalid request",
-                    content = @Content(schema = @Schema(implementation = ApiException.class))
-            ),
-            @ApiResponse(responseCode = "401", description = "Invalid credentials",
-                    content = @Content(schema = @Schema(implementation = ApiException.class))
-            )
-    })
     @PostMapping("/login")
     ResponseEntity<Void> login(
             @Valid @RequestBody LoginRequest request
