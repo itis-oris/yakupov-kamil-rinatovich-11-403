@@ -21,6 +21,6 @@ public class AuthAccessDeniedHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         log.debug("Access Denied Exception | message={}", accessDeniedException.getMessage());
         response.setStatus(SC_FORBIDDEN);
-        response.sendRedirect("/exception/403");
+        request.getRequestDispatcher("/exception/403").forward(request, response);
     }
 }

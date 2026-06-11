@@ -28,6 +28,7 @@ public class SecurityConfig {
             "/login",
             "/register",
             "/flights/**",
+            "/exception/**",
             "/css/**",
             "/js/**",
             "/api/v1/auth/**",

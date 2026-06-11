@@ -21,6 +21,6 @@ public class AuthEntryPoint implements AuthenticationEntryPoint {
 
         log.debug("Authentication exception | message={}", authException.getMessage());
         response.setStatus(SC_UNAUTHORIZED);
-        response.sendRedirect("/exception/401");
+        request.getRequestDispatcher("/exception/401").forward(request, response);
     }
 }
